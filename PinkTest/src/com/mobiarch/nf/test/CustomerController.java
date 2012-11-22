@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.mobiarch.nf.Context;
+import com.mobiarch.nf.Path;
 
 @Named("customers")
 @RequestScoped
@@ -63,7 +64,8 @@ public class CustomerController implements Serializable {
 		}
 	}
 
-	public String update() {
+	@Path("/update")
+	public String updateCustomer() {
 		if (context.isPostBack() && context.isValidationFailed() == false) {
 			logger.fine("Updating: " + customer.getId());
 			customerList.put(customer.getId(), customer);
