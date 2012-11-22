@@ -37,15 +37,19 @@ public class Processor {
 		context.setRequest(request);
 		context.setResponse(response);
 		context.setProcessor(this);
-		contextVar.set(context);
+		contextVar.set(context); //Set the context for this thread
 
-		PathInfo pInfo = resolvePathInfo(request);
-		Bean<?> bean = getBeanReference(pInfo.getBeanName());
-		Object o = getBeanInstance(bean);
-		MethodInfo mInfo = resolveMethod(pInfo, bean.getBeanClass());
-		transferProperties(request, bean, o, mInfo, pInfo);
-		String outcome = invokeMethod(mInfo, o);
-		navigateTo(pInfo.getBeanName(), outcome.toString());
+		try {
+			PathInfo pInfo = resolvePathInfo(request);
+			Bean<?> bean = getBeanReference(pInfo.getBeanName());
+			Object o = getBeanInstance(bean);
+			MethodInfo mInfo = resolveMethod(pInfo, bean.getBeanClass());
+			transferProperties(request, bean, o, mInfo, pInfo);
+			String outcome = invokeMethod(mInfo, o);
+			navigateTo(pInfo.getBeanName(), outcome.toString());
+		} finally {
+			contextVar.remove(); //Remove the context
+		}
 	}
 
 	public MethodInfo resolveMethod(PathInfo pi, Class<?> cls) {
