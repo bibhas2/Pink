@@ -156,7 +156,7 @@ public class Processor {
 	private String invokeMethod(MethodInfo mi, Object o)
 			throws NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException {
-		logger.info("Invoking method: " + mi.getMethod().getName());
+		logger.fine("Invoking method: " + mi.getMethod().getName());
 		
 		Object outcome = mi.getMethod().invoke(o);
 		
@@ -169,7 +169,7 @@ public class Processor {
 		Set<Bean<?>> beans = beanManager.getBeans(name);
 		Bean<?> b = beans.iterator().next();
 
-		logger.info("Found bean: " + b.getBeanClass().getName());
+		logger.fine("Found bean: " + b.getBeanClass().getName());
 		
 		return b;
 	}

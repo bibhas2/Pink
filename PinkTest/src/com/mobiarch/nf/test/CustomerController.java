@@ -27,7 +27,6 @@ public class CustomerController implements Serializable {
 	
 	@PostConstruct
 	public void onCreate() {
-		logger.info("onCreate()");
 		departments.add(new Department("Finance", 1));
 		departments.add(new Department("Engineering", 2));
 		departments.add(new Department("Manufactuering", 3));

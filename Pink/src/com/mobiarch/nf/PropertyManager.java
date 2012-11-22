@@ -42,7 +42,7 @@ public class PropertyManager {
 		
 		//Next transfer path parameters
 		if (mi.getParameterNames().size() != pi.getPathParameters().size()) {
-			logger.warning("Number of parameters in @Path annotation doesn't match the URI");
+			logger.fine("Number of parameters in @Path annotation doesn't match the URI");
 		}
 		for (int i = 0; i < mi.getParameterNames().size(); ++i) {
 			if (i == pi.getPathParameters().size()) {
