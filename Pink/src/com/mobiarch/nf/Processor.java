@@ -43,7 +43,7 @@ public class Processor {
 		Bean<?> bean = getBeanReference(pInfo.getBeanName());
 		Object o = getBeanInstance(bean);
 		MethodInfo mInfo = resolveMethod(pInfo, bean.getBeanClass());
-		transferProperties(request, bean, o);
+		transferProperties(request, bean, o, mInfo, pInfo);
 		String outcome = invokeMethod(mInfo, o);
 		navigateTo(pInfo.getBeanName(), outcome.toString());
 	}
@@ -91,7 +91,7 @@ public class Processor {
 				if (isAbsolute) {
 					logger.fine("Absolute path is set for method.");
 					for (int j = 0; j < parts.length; ++j) {
-						if (i == 0) {
+						if (j == 0) {
 							continue;
 						} else if (j == 1) {
 							tmpMi.setPath(parts[j]);
@@ -217,10 +217,10 @@ public class Processor {
 
 	protected void transferProperties(HttpServletRequest request,
 			Bean<?> bean,
-			Object o) throws Exception {
+			Object o, MethodInfo mi, PathInfo pi) throws Exception {
 		PropertyManager pmgr = new PropertyManager();
 		
-		pmgr.transferProperties(request, bean.getBeanClass(), o);
+		pmgr.transferProperties(request, bean.getBeanClass(), o, mi, pi);
 	}
 
 	//For non CDI clients to get context

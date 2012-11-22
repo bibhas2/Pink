@@ -3,12 +3,12 @@
 <html>
 <body>
 <a href="register">Add new customer</a>
-<h2>Customer list</h2>
+<h2>Customer List</h2>
 <c:forEach  items="${customers.customerList}" var="c">
 <p>
 Name: ${c.fullName}<br/>
 E-mail: ${c.email}<br/>
-<a href="show?customer.id=${c.id}">View</a> <a href="update?customer.id=${c.id}">Edit</a> <a href="delete?customer.id=${c.id}">Delete</a>
+<a href="show/${c.id}">View</a> <a href="update/${c.id}">Edit</a> <a href="delete/${c.id}">Delete</a>
 </p>
 </c:forEach>
 </body>

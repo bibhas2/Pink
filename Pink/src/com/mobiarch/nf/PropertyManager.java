@@ -26,7 +26,8 @@ public class PropertyManager {
 	
 	public void transferProperties(HttpServletRequest request,
 			Class<?> cls,
-			Object o) throws Exception {
+			Object o, MethodInfo mi, PathInfo pi) throws Exception {
+		//First transfer HTTP request parameters
 		Map<String, PropertyDescriptor> descMap = getPropertyMap(cls);
 		Map<String, String[]> inMap = request.getParameterMap();
 		Iterator<Entry<String, String[]>> iter = inMap.entrySet().iterator();
@@ -37,6 +38,21 @@ public class PropertyManager {
 			String val[] = e.getValue();
 			
 			setProperty(o, cls, descMap, name, val);
+		}
+		
+		//Next transfer path parameters
+		if (mi.getParameterNames().size() != pi.getPathParameters().size()) {
+			logger.warning("Number of parameters in @Path annotation doesn't match the URI");
+		}
+		for (int i = 0; i < mi.getParameterNames().size(); ++i) {
+			if (i == pi.getPathParameters().size()) {
+				//We don't have any more path parameters
+				break;
+			}
+			String paramName = mi.getParameterNames().get(i);
+			String paramValue[] = {pi.getPathParameters().get(i)};
+			
+			setProperty(o, cls, descMap, paramName, paramValue);
 		}
 	}
 

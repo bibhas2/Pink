@@ -38,6 +38,7 @@ public class CustomerController implements Serializable {
 		return "@list";
 	}
 
+	@Path("customer.id")
 	public String show() {
 		logger.fine("showForm() called with id: " + customer.getId());
 
@@ -64,7 +65,7 @@ public class CustomerController implements Serializable {
 		}
 	}
 
-	@Path("/update")
+	@Path("/update/customer.id")
 	public String updateCustomer() {
 		if (context.isPostBack() && context.isValidationFailed() == false) {
 			logger.fine("Updating: " + customer.getId());
@@ -81,6 +82,7 @@ public class CustomerController implements Serializable {
 		}
 	}
 
+	@Path("customer.id")
 	public String delete() {
 		logger.fine("Deleting: " + customer.getId());
 
