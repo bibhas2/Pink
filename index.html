@@ -120,26 +120,27 @@ public class MySimpleController {
 <pre><code>@Named("customers")
 @RequestScoped
 public class CustomerController {
-        Logger logger = Logger.getLogger(getClass().getName());
-        Customer customer = new Customer();
+    Logger logger = Logger.getLogger(getClass().getName());
+    Customer customer = new Customer();
     @Inject
     Context context; //Pink request context
 
     public String register() {
         if (context.isPostBack()) {
-            logger.fine("Registering: " + customer.getFullName() + " Email: " + customer.getEmail());
-                        //Create customer record in database...
+                logger.fine("Registering: " + customer.getFullName() + 
+                    " Email: " + customer.getEmail());
+                //Create customer record in database...
 
-                        return "show?customer.id=" + 100;
-        } else {
-            return "new_customer_form";
-        }
+                return "show?customer.id=" + 100;
+            } else {
+                return "new_customer_form";
+            }
     }
-        public String show() {
-            logger.fine("Showing customer: " + customer.id);
+    public String show() {
+         logger.fine("Showing customer: " + customer.id);
 
-            return "display_customer";
-        }
+        return "display_customer";
+    }
 }
 
 public class Customer {
@@ -147,7 +148,7 @@ public class Customer {
     private String fullName;
     private String email;
 
-        //Getters and setters...
+    //Getters and setters...
 }
 </code></pre>
 
@@ -169,7 +170,7 @@ E-mail: &lt;p:input type="text" name="customer.email"/&gt;&lt;br/&gt;
 &lt;/html&gt;
 </code></pre>
 
-<p>The action of the form is "customers/register". This will invoke the the register() method of our bean. The name attribute of the  tag refers to the property names of the bean. </p>
+<p>The action of the form is "customers/register". This will invoke the the register() method of our bean. The name attribute of the <strong>p:input</strong> tag refers to the property names of the bean. </p>
 
 <p>To view the form, send a GET request for the URI: <strong>/app/customers/register</strong>. After the form is submitted, register() will be called. This time, we return an outcome "show?customer.id=100". As a best practice, POST should result in a redirection. Pink enforces that behavior by default. This outcome will redirect the browser to <strong>/app/customers/show?customer.id=100</strong>. This time show() will be called which will load /customers/display_customer.jsp.</p>
 
@@ -187,19 +188,18 @@ private String fullName;
 private String email;
 </code></pre>
 
-<p>Now, the register method should re-display the form if validation fails.</p>
+<p>Now, the register method should re-display the form if validation fails. We check for validation failure by calling context.isValidationFailed().</p>
 
-<pre><code>    public String register() {
-        if (context.isPostBack() **&amp;&amp; context.isValidationFailed() == false**) {
-            logger.fine("Registering: " + customer.getFullName() + " Email: " + customer.getEmail());
-                        //Create customer record in database...
+<pre><code>public String register() {
+    if (context.isPostBack() &amp;&amp; context.isValidationFailed() == false) {
+        logger.fine("Registering: " + customer.getFullName() + " Email: " + customer.getEmail());
+        //Create customer record in database...
 
-                        return "show?customer.id=" + 100;
-        } else {
-            return "new_customer_form";
-        }
+        return "show?customer.id=" + 100;
+    } else {
+        return "new_customer_form";
     }
-
+}
 </code></pre>
 
 <p>Finally, show the error messages above the form.</p>
@@ -209,6 +209,8 @@ private String email;
 ...
 &lt;/p:form&gt;
 </code></pre>
+
+<p>You can set any attribute for <strong>p:errors</strong>. Here we set the style.</p>
       </section>
     </div>
 
