@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Named
 @RequestScoped
 public class Processor {
@@ -343,8 +345,12 @@ public class Processor {
 	 * 
 	 * @param o - The object to be converted to JSON.
 	 */
-	public void outputJSON(Object o) {
+	public void outputJSON(Object o) throws Exception {
+		logger.fine("Sending JSON document back.");
+		context.getResponse().setContentType("application/json");
+		ObjectMapper mapper = new ObjectMapper();
 		
+		mapper.writeValue(context.getResponse().getOutputStream(), o);
 	}
 
 	/**
