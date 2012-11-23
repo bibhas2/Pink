@@ -4,7 +4,7 @@
 <body>
 <a href="list">Back2 to List</a><br/>
 
-<p:errors id="test" class="errors"/>
+<p:errors style="color: red"/>
 <p:form action="customers/register" method="post" id="theForm">
 Name: <p:input type="text" name="customer.fullName"/><br/>
 E-mail: <p:input type="text" name="customer.email"/><br/>

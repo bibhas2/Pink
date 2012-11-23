@@ -48,6 +48,19 @@ public class Context {
 		}
 		violations.add(violation);
 	}
+	public List<PropertyViolation> getViolationsForProperty(String propertyName) {
+		ArrayList<PropertyViolation> list = new ArrayList<PropertyViolation>();
+		
+		if (violations == null) {
+			return list;
+		}
+		for (PropertyViolation v : violations) {
+			if (v.getPropertyName().equals(propertyName)) {
+				list.add(v);
+			}
+		}
+		return list;
+	}
 	public Processor getProcessor() {
 		return processor;
 	}
