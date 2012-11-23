@@ -14,6 +14,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
@@ -313,16 +314,27 @@ public class Processor {
 					redirect(beanName, outcomeStr);
 				} else {
 					// Do a forward
-					outcomeStr = "/" + beanName + "/" + outcomeStr + ".jsp";
-					logger.fine("Forwarding to: " + outcomeStr);
-					context.getRequest().getRequestDispatcher(outcomeStr)
-							.forward(context.getRequest(), context.getResponse());
+					forward(beanName, outcomeStr);
 				}
 			} else {
 				//Respond with JSON
 				outputJSON(outcome);
 			}
 		}
+	}
+
+	public void forward(String beanName, String outcome)
+			throws ServletException, IOException {
+		if (outcome.startsWith("/")) {
+			//Absolute outcome. Keep the directory structure
+			outcome = outcome + ".jsp";
+		} else {
+			//Relative outcome. Get JSP from bean's own folder.
+			outcome = "/" + beanName + "/" + outcome + ".jsp";
+		}
+		logger.fine("Forwarding to: " + outcome);
+		context.getRequest().getRequestDispatcher(outcome)
+				.forward(context.getRequest(), context.getResponse());
 	}
 
 	/**
