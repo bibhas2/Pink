@@ -1,0 +1,8 @@
+Pink is a framework to develop a modern web application quickly and easily using the Java EE stack. In the end, it is similar in architecture as Spring MVC.
+
+Key features:
+ - Extensive use of CDI. You must use a CDI capable Web container like JBoss, TomEE, WebLogic or WebSphere.
+ - Validation using JSR 303.
+ - Much better support for AJAX and JSON than JSF 2.0.
+ - SEO friendly URL.
+ - Very easy to learn and use.
