@@ -93,12 +93,12 @@ public class MySimpleController {
     }
     //Action handler method
     public String hello() {
-        return "hello";
+        return "greet";
     }
 }
 </code></pre>
 
-<p>Here, hello() is an action handler method. It is returning a String outcome. For a GET request, Pink treats the outcome to be a JSP file name (without the .jsp). By default, the file name is relative to the bean's name. So, create a JSP file called <strong>/simple/hello.jsp</strong> under the WebContent folder.</p>
+<p>Here, hello() is an action handler method. It is returning a String outcome. For a GET request, Pink treats the outcome to be a JSP file name (without the .jsp). By default, the file name is relative to the bean's name. So, create a JSP file called <strong>/simple/greet.jsp</strong> under the WebContent folder.</p>
 
 <pre><code>&lt;html&gt;
 &lt;body&gt;
