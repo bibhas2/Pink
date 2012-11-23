@@ -21,10 +21,14 @@
           <h1 id="project_title">Pink</h1>
           <h2 id="project_tagline">Pink is a framework to develop a modern web application quickly and easily using the Java EE stack.</h2>
 
+<a class="blue-btn" href="docs.html">Documentation</a>
+<a class="blue-btn">Download</a>
+<!--
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/bibhas2/Pink/zipball/master">Download this project as a .zip file</a>
               <a class="tar_download_link" href="https://github.com/bibhas2/Pink/tarball/master">Download this project as a tar.gz file</a>
             </section>
+-->
         </header>
     </div>
 
@@ -33,7 +37,7 @@
       <section id="main_content" class="inner">
         <h2>Welcome to Pink</h2>
 
-<p>Pink will let you build a modern web site using Java EE quickly and painlessly. It grew out of the frustration with Java ServerFaces 2.0. Pink is a small library that let's you do the most common things without a fuss.</p>
+<p>Pink will let you build a modern web site using Java EE quickly and painlessly. It grew out of my frustration with Java ServerFaces 2.0. Pink is a small library that let's you do the most common things without a fuss.</p>
 
 <blockquote>
 <p>As I kept working on the architecture of Pink, I realized that more and more it resembled Spring MVC. If you need a more robust alternative to Pink, by all means consider Spring MVC.</p>
@@ -51,168 +55,8 @@
 
 <p>Pink requires a CDI compatible web container. It has been tested in JBoss AS 7 and TomEE Web profile 1.5.0. Pink will not work in a plain Tomcat server.</p>
 
-<h3>Getting Started</h3>
-
-<p>To use Pink, create a basic Dynamic Web project in Eclipse. Add Pink.jar to WEB-INF/lib. If you plan on using the JSON serialization, then add these JAR files to WEB-INF/lib:</p>
-
-<ol>
-<li>jackson-annotations-2.1.1.jar</li>
-<li>jackson-core-2.1.1.jar</li>
-<li>jackson-databind-2.1.1.jar</li>
-</ol><p>Register the Pink Servlet in web.xml.</p>
-
-<pre><code>&lt;servlet&gt;
-  &lt;servlet-name&gt;Pink Servlet&lt;/servlet-name&gt;
-  &lt;servlet-class&gt;com.mobiarch.nf.Controller&lt;/servlet-class&gt;
-  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-&lt;servlet-mapping&gt;
-  &lt;servlet-name&gt;Pink Servlet&lt;/servlet-name&gt;
-  &lt;url-pattern&gt;/app/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</code></pre>
-
-<p>Finally, make sure that you have a <strong>beans.xml</strong> file in WEB-INF folder to enable CDI.</p>
-
-<p>You can use the PinkTest web project to see how these things are done.</p>
-
-<h3>Basic Model View Controller</h3>
-
-<p>A controller is a CDI managed bean. Here is a simple controller.</p>
-
-<pre><code>@Named("simple")
-@RequestScoped
-public class MySimpleController {
-    String fullName;
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-    //Action handler method
-    public String hello() {
-        return "greet";
-    }
-}
-</code></pre>
-
-<p>Here, hello() is an action handler method. It is returning a String outcome. For a GET request, Pink treats the outcome to be a JSP file name (without the .jsp). By default, the file name is relative to the bean's name. So, create a JSP file called <strong>/simple/greet.jsp</strong> under the WebContent folder.</p>
-
-<pre><code>&lt;html&gt;
-&lt;body&gt;
-&lt;p&gt;Hi, ${simple.fullName}!&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>Now, you can send a request to the hello() method, using the URI <strong>/app/simple/hello?fullName=Daffy</strong>. For example, if your web app's context root is SimpleWeb and the server is listening on port 8080, the full URL will be <strong>http://localhost:8080/SimpleWeb/app/simple/hello?fullName=Daffy</strong>. This will show a page saying "Hi, Daffy!".</p>
-
-<p>The URI is very easy to form. Here, "simple" refers to the controller bean by its name. Then "hello" is a path that points to the hello() method. The "fullName" URL parameter sets the fullName property of the bean.</p>
-
-<h3>For Submission Handling</h3>
-
-<p>Pink uses simple URL parameter naming convention. As you have seen above, to update the fullName property of the controller, you send a URL parameter called fullName. It's that simple. A set of custom tags are provided to make your life even easier when designing forms.</p>
-
-<p>Consider a controller:</p>
-
-<pre><code>@Named("customers")
-@RequestScoped
-public class CustomerController {
-    Logger logger = Logger.getLogger(getClass().getName());
-    Customer customer = new Customer();
-    @Inject
-    Context context; //Pink request context
-
-    public String register() {
-        if (context.isPostBack()) {
-                logger.fine("Registering: " + customer.getFullName() + 
-                    " Email: " + customer.getEmail());
-                //Create customer record in database...
-
-                return "show?customer.id=" + 100;
-            } else {
-                return "new_customer_form";
-            }
-    }
-    public String show() {
-         logger.fine("Showing customer: " + customer.id);
-
-        return "display_customer";
-    }
-}
-
-public class Customer {
-    private String id;
-    private String fullName;
-    private String email;
-
-    //Getters and setters...
-}
-</code></pre>
-
-<p>The register() method is used in two ways. A GET request shows the registration form. When the form is posted, a POST request creates a new customer in the database.</p>
-
-<p>The form needs to be created in <strong>/customers/new_customer_form.jsp</strong> since the outcome returned by register() after a GET request is "new_customer_form". The JSP will look like this:</p>
-
-<pre><code>&lt;%@ taglib uri="http://mobiarch" prefix="p" %&gt;
-&lt;html&gt;
-&lt;body&gt;
-
-&lt;p:form action="customers/register" method="post"&gt;
-Name: &lt;p:input type="text" name="customer.fullName"/&gt;&lt;br/&gt;
-E-mail: &lt;p:input type="text" name="customer.email"/&gt;&lt;br/&gt;
-&lt;input type="submit" value="Add Customer"/&gt;
-&lt;/p:form&gt;
-
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>The action of the form is "customers/register". This will invoke the the register() method of our bean. The name attribute of the <strong>p:input</strong> tag refers to the property names of the bean. </p>
-
-<p>To view the form, send a GET request for the URI: <strong>/app/customers/register</strong>. After the form is submitted, register() will be called. This time, we return an outcome "show?customer.id=100". As a best practice, POST should result in a redirection. Pink enforces that behavior by default. This outcome will redirect the browser to <strong>/app/customers/show?customer.id=100</strong>. This time show() will be called which will load /customers/display_customer.jsp.</p>
-
-<blockquote>
-<p>Pink JSP tags can take any arbitrary attributes. That means, you can use the new HTML5 attributes or any custom attributes to drive a modern jQuery based application.</p>
-</blockquote>
-
-<h3>Form Validation</h3>
-
-<p>Pink uses JSR 303 for form validation. We can annotate the fields of the Customer class to set the validation rules.</p>
-
-<pre><code>@Size(min=3, max=15, message="The name must be at least 3 and maximum 15 characters long")
-private String fullName;
-@Size(min=3, max=25, message="Please enter a valid e-mail")
-private String email;
-</code></pre>
-
-<p>Now, the register method should re-display the form if validation fails. We check for validation failure by calling context.isValidationFailed().</p>
-
-<pre><code>public String register() {
-    if (context.isPostBack() &amp;&amp; context.isValidationFailed() == false) {
-        logger.fine("Registering: " + customer.getFullName() + " Email: " + customer.getEmail());
-        //Create customer record in database...
-
-        return "show?customer.id=" + 100;
-    } else {
-        return "new_customer_form";
-    }
-}
-</code></pre>
-
-<p>Finally, show the error messages above the form.</p>
-
-<pre><code>&lt;p:errors style="color: red"/&gt;
-&lt;p:form action="customers/register" method="post"&gt;
-...
-&lt;/p:form&gt;
-</code></pre>
-
-<p>You can set any attribute for <strong>p:errors</strong>. Here we set the style attribute.</p>
-      </section>
-    </div>
+</section>
+</div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">

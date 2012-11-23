@@ -292,6 +292,26 @@ Full-Width Styles
   border-bottom-right-radius: 2px;
 }
 
+.blue-btn {
+width: 158px;
+display: inline-block;
+//float: left;
+padding: 10px 14px;
+color: white;
+border-radius: 4px;
+font-size: 16px;
+font-weight: 700;
+text-align: center;
+border: #5285BE 1px solid;
+cursor: pointer;
+background-color: #1A82F7;
+background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#54AAE8), to(#0090FF));
+background-image: -webkit-linear-gradient(top, #54AAE8, #0090FF);
+background-image: -moz-linear-gradient(top, #54AAE8, #0090FF);
+background-image: -ms-linear-gradient(top, #54AAE8, #0090FF);
+background-image: -o-linear-gradient(top, #54AAE8, #0090FF);
+}
+
 #header_wrap {
   background: #212121;
   background: -moz-linear-gradient(top, #373737, #212121);
