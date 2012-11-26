@@ -39,7 +39,7 @@ public class CustomerController implements Serializable {
 
 	@Path("customer.id")
 	public String show() {
-		logger.fine("showForm() called with id: " + customer.getId());
+		logger.fine("show() called with id: " + customer.getId());
 
 		customer = customerList.get(customer.getId());
 
@@ -48,6 +48,14 @@ public class CustomerController implements Serializable {
 		} else {
 			return "invalid_customer";
 		}
+	}
+	@Path("customer.id")
+	public Customer get() {
+		logger.fine("get() called with id: " + customer.getId());
+
+		Customer c = customerList.get(customer.getId());
+
+		return c;
 	}
 
 	public String register() {

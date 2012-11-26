@@ -5,13 +5,13 @@
 <a href="list">Back2 to List</a><br/>
 
 <p:errors style="color: red"/>
-<p:form action="customers/register" method="post" id="theForm">
+<p:form action="customers/register" method="post">
 Name: <p:input type="text" name="customer.fullName"/><br/>
 E-mail: <p:input type="text" name="customer.email"/><br/>
 Age: <p:input type="text" name="customer.age"/><br/>
 Salary: <p:input type="text" name="customer.salary"/><br/>
 Department:
-<p:select name="customer.department" items="departments" itemLabel="name" itemValue="id"/>
+<p:select name="customer.department" size="5" multiple="multiple" items="departments" itemLabel="name" itemValue="id"/>
 <br/>
 Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
 <p:input type="radio" name="customer.level" value="S" label="Silver"/>

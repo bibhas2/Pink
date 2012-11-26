@@ -9,7 +9,7 @@ E-mail: <p:input type="text" name="customer.email"/><br/>
 Age: <p:input type="text" name="customer.age"/><br/>
 Salary: <p:input type="text" name="customer.salary"/><br/>
 Department:<br/>
-<p:select name="customer.department" items="departments" itemLabel="name" itemValue="id"/><br/>
+<p:select name="customer.department" size="5" multiple="multiple" items="departments" itemLabel="name" itemValue="id"/><br/>
 Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
 <p:input type="radio" name="customer.level" value="S" label="Silver"/>
 <p:input type="radio" name="customer.level" value="B" label="Bronze"/>

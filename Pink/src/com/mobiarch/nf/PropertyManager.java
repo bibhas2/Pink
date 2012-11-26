@@ -3,6 +3,7 @@ package com.mobiarch.nf;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -14,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import javax.activation.UnsupportedDataTypeException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -57,7 +59,7 @@ public class PropertyManager {
 	}
 
 	public void setProperty(Object o, Class<?> cls, Map<String, PropertyDescriptor> descMap, String name,
-			String[] val) throws Exception {
+			String[] values) throws Exception {
 		logger.fine("Setting property: " + name);
 		
 		String parts[] = name.split("\\.");
@@ -84,11 +86,15 @@ public class PropertyManager {
 		}
 		logger.fine("Setting final property: " + name);
 		if (desc.getPropertyType().isArray()) {
-			Object arg[] = {val};
-			desc.getWriteMethod().invoke(target, arg);
+			Object newArray = Array.newInstance(desc.getPropertyType().getComponentType(), values.length);
+			for (int i = 0; i < values.length; ++i) {
+				Object convertedValue = convertFromString(values[i], desc.getPropertyType().getComponentType());
+				Array.set(newArray, i, convertedValue);
+			}
+			desc.getWriteMethod().invoke(target, newArray);
 		} else {
 			try {
-				Object arg = convertFromString(val[0], desc);
+				Object arg = convertFromString(values[0], desc.getPropertyType());
 				desc.getWriteMethod().invoke(target, arg);
 				validateProperty(targetClass, desc.getName(), arg);
 			} catch (ParseException pe) {
@@ -125,8 +131,18 @@ public class PropertyManager {
 
 		return desc.getReadMethod().invoke(o);
 	}
-	
-	public Object getProperty(Class<?> cls, Object o, String name) throws Exception {
+	/**
+	 * Returns the value of a property of a bean converted to String.
+	 * 
+	 * @param cls - The true class of the bean. For a CDI bean this may be different from what getClass() returns.
+	 * @param o - The bean object.
+	 * @param name - The name of the property. This can be nested with each property separated by a ".". Such as "customer.phone".
+	 * @Param bConvert - If true then convert the property value to String.
+	 * @return The value of the property converted to String. IllegalArgumentException is thrown if property name is invalid.
+	 * @throws Exception
+	 */
+	public Object getProperty(Class<?> cls, Object o, String name, boolean bConvert) throws Exception {
+		logger.fine("GetProperty with conversion: " + bConvert);
 		String parts[] = name.split("\\.");
 		Object target = o;
 		Class<?> targetClass = cls;
@@ -147,9 +163,18 @@ public class PropertyManager {
 			targetClass = target.getClass();
 		}
 
-		return convertToString(target, desc);
+		if (bConvert) {
+			return convertToString(target, desc);
+		} else {
+			return target;
+		}
 	}
 
+	public Object getProperty(Class<?> cls, Object o, String name) throws Exception {
+		logger.fine("Default getProperty called");
+		return getProperty(cls, o, name, true);
+	}
+	
 	public Map<String, PropertyDescriptor> getPropertyMap(Class<?> cls) throws Exception {
 		String clsName = cls.getName();
 		Map<String, PropertyDescriptor> map = descCache.get(clsName);
@@ -188,8 +213,7 @@ public class PropertyManager {
 		return map;
 	}
 
-	public Object convertFromString(String str, PropertyDescriptor desc) throws ParseException {
-		Class<?> type = desc.getPropertyType();
+	public Object convertFromString(String str, Class<?> type) throws ParseException, UnsupportedDataTypeException {
 		Context ctx = Context.getContext();
 		NumberFormat nFmt = null;
 		
@@ -210,8 +234,9 @@ public class PropertyManager {
 		} else if (type == Boolean.class || type == boolean.class) {
 			//Only case insensitive "true" evaluates to true. All else is false.
 			return new Boolean(str);
+		} else {
+			throw new UnsupportedDataTypeException("Can not convert string to: " + type.getName());
 		}
-		return str;
 	}
 	
 	public String convertToString(Object o, PropertyDescriptor desc) {

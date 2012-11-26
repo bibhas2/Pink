@@ -8,7 +8,7 @@
 <p>
 Name: ${c.fullName}<br/>
 E-mail: ${c.email}<br/>
-<a href="show/${c.id}">View</a> <a href="update/${c.id}">Edit</a> <a href="delete/${c.id}">Delete</a>
+<a href="show/${c.id}">View</a> <a href="get/${c.id}">View JSON</a> <a href="update/${c.id}">Edit</a> <a href="delete/${c.id}">Delete</a>
 </p>
 </c:forEach>
 </body>

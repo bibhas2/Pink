@@ -10,7 +10,7 @@ public class Customer {
 	private String fullName;
 	@Size(min=3, max=25, message="Please enter a valid e-mail")
 	private String email;
-	private int department;
+	private int department[];
 	private String level;
 	private String sendEmail;
 	private int age;
@@ -51,10 +51,10 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getDepartment() {
+	public int[] getDepartment() {
 		return department;
 	}
-	public void setDepartment(int department) {
+	public void setDepartment(int[] department) {
 		this.department = department;
 	}
 	public String getLevel() {
