@@ -1,33 +1,13 @@
 package com.mobiarch.nf;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * Servlet implementation class Controller
+ * CDI beans that are exposed to HTTP request must extend this class. The primary purpose of
+ * this class is to distinguish an exposed CDI bean from all other CDI beans. This prevents
+ * the possibility of malicious users executing methods of arbitrary CDI beans.
+ * 
+ * @author wasadmin
+ *
  */
-@WebServlet("/app/*")
-public class Controller extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	@Inject
-	Processor processor;
-	Logger logger = Logger.getLogger(getClass().getName());
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			processor.process(request, response);
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error", e);
-		}
-	}
+public abstract class Controller {
+
 }

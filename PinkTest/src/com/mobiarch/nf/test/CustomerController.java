@@ -1,6 +1,5 @@
 package com.mobiarch.nf.test;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -11,12 +10,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.mobiarch.nf.Context;
+import com.mobiarch.nf.Controller;
 import com.mobiarch.nf.Path;
 
 @Named("customers")
 @RequestScoped
-public class CustomerController implements Serializable {
-	private static final long serialVersionUID = 8894086705176801502L;
+public class CustomerController extends Controller {
 	Logger logger = Logger.getLogger(getClass().getName());
 	@Inject
 	Context context;
@@ -66,7 +65,7 @@ public class CustomerController implements Serializable {
 			customer.setId(id);
 			customerList.put(id, customer);
 
-			return "show?customer.id=" + id;
+			return "show/" + id;
 		} else {
 			return "show_add_form";
 		}

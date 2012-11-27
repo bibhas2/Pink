@@ -1,7 +1,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <body>
-<a href="list">Back to List</a>
+<a href="../list">Back to List</a>
 <p>
 ID: ${customers.customer.id}<br/>
 Name: ${customers.customer.fullName}<br/>

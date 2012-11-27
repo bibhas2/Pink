@@ -249,6 +249,13 @@ public class Processor {
 		Set<Bean<?>> beans = beanManager.getBeans(name);
 		Bean<?> b = beans.iterator().next();
 
+		/*
+		 * Make sure that this bean is exposed.
+		 */
+		if (!Controller.class.isAssignableFrom(b.getBeanClass())) {
+			logger.severe("CDI bean class is not exposed to the web by extending the Controller class: " + b.getBeanClass().getName());
+			throw new IllegalAccessError();
+		}
 		logger.fine("Found bean: " + b.getBeanClass().getName());
 		
 		return b;
