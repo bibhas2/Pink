@@ -247,6 +247,9 @@ public class Processor {
 		logger.fine("Looking for bean: " + name);
 
 		Set<Bean<?>> beans = beanManager.getBeans(name);
+		if (!beans.iterator().hasNext()) {
+			throw new IllegalArgumentException("Invalid bean name: " + name);
+		}
 		Bean<?> b = beans.iterator().next();
 
 		/*

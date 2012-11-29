@@ -11,10 +11,12 @@ public class Customer {
 	@Size(min=3, max=25, message="Please enter a valid e-mail")
 	private String email;
 	private int department[];
-	private String level;
+	private String level = "G";
 	private String sendEmail;
 	private int age;
-	
+	private boolean active = false;
+    private String residenceState;
+    
 	@Format(pattern="#.##", message="Please enter a valid salary")
 	private float salary;
 	
@@ -75,4 +77,17 @@ public class Customer {
 	public void setSalary(float salary) {
 		this.salary = salary;
 	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	public String getResidenceState() {
+		return residenceState;
+	}
+	public void setResidenceState(String residenceState) {
+		this.residenceState = residenceState;
+	}
+	
 }

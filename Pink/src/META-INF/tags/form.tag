@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ tag dynamic-attributes="dynattrs" %> 
 
-<%@attribute name="action" required="true"  %>
+<%@attribute name="action" required="true"  %><%@attribute name="method" required="false"%>
 
 <%
 	String parts[] = action.split("/");
@@ -15,9 +15,14 @@
 	
 	//String action = null;
 	action = request.getContextPath() + "/app/" + action;
+	jspContext.setAttribute("action", action);
+	
+	if (method == null) {
+		jspContext.setAttribute("method", "post");
+	}
 %>
 
-<form <c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> action="<%=action%>">
+<form <c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> action="${action}" method="${method}">
 	<jsp:doBody/>
 </form>
 

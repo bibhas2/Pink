@@ -5,7 +5,8 @@
 <a href="list">Back2 to List</a><br/>
 
 <p:errors style="color: red"/>
-<p:form action="customers/register" method="post">
+<p:form action="customers/register">
+<%--
 Name: <p:input type="text" name="customer.fullName"/><br/>
 E-mail: <p:input type="text" name="customer.email"/><br/>
 Age: <p:input type="text" name="customer.age"/><br/>
@@ -19,6 +20,19 @@ Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
 <br/>
 <p:input id="promo" type="checkbox" name="customer.sendEmail" value="Y" label="Send me promotional e-mails"/> 
 <br/>
+ --%>
+ 
+Name: <p:input type="text" name="customer.fullName" size="35"/><br/>
+Salary: <p:input type="text" name="customer.salary" size="35"/><br/>
+Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/> 
+<p:input type="radio" name="customer.level" value="S" label="Silver"/>
+<p:input type="radio" name="customer.level" value="B" label="Bronze"/>
+<br/>
+<p:input type="checkbox" name="customer.active" value="true" 
+    label="Has shopped in last 6 months"/><br/>
+<p:input type="checkbox" name="customer.residenceState" value="NY" 
+    label="New York Resident"/><br/>
+    
 <input type="submit" value="Add Customer"/>
 </p:form>
 </body>

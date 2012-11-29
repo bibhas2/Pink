@@ -26,5 +26,5 @@ if (type.equals("checkbox") || type.equals("radio")) {
 		}
 	}
 }%>
-<input <c:if test="${!empty id}">id="<%=id%>"</c:if><c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> <%=qualifier%> type="${type}" value="<%=val%>" name="${name}"/>
+<input<c:if test="${!empty id}"> id="<%=id%>"</c:if><c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> <%=qualifier%> type="${type}" value="<%=val%>" name="${name}"/>
 <c:if test="${!empty label}"><label for="<%=id%>">${label}</label></c:if>
