@@ -8,7 +8,7 @@ http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
 	<uri>http://mobiarch</uri>
 	<tag-file>
 		<name>errors</name>
-		<path>/META-INF/tags/error.tag</path>
+		<path>/META-INF/tags/errors.tag</path>
 	</tag-file>
 	<tag-file>
 		<name>form</name>
