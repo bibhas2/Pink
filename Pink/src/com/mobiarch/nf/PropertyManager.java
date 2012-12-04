@@ -223,6 +223,11 @@ public class PropertyManager {
 		
 		if (fmt != null) {
 			formatStr = fmt.pattern();
+			//Java annotation doesn't allow null attribute value.
+			//Normalize an empty string to null.
+			if (formatStr != null && formatStr.length() == 0) {
+				formatStr = null;
+			}
 		}
 
 		if (type == String.class) {
@@ -298,7 +303,7 @@ public class PropertyManager {
 			nFmt = NumberFormat.getIntegerInstance(ctx.getLocale());
 			return nFmt.format(o);
 		} else if (cls == Float.class || cls == Double.class) {
-			if (formatStr == null) {
+			if (formatStr == null || formatStr.length() == 0) {
 				nFmt = NumberFormat.getNumberInstance(ctx.getLocale());
 				
 				return nFmt.format(o);

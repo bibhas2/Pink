@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value={ElementType.FIELD})
 public @interface Format {
-	String pattern();
+	String pattern() default "";
 	String message() default "";
 }

@@ -16,6 +16,7 @@ public class Customer {
 	private int department[];
 	private String level = "G";
 	private String sendEmail;
+	@Format(message="Please enter a valid age")
 	private int age;
 	private boolean active = false;
     private String residenceState;

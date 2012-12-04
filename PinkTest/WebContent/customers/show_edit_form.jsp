@@ -20,6 +20,7 @@ Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
  --%>
  
 Name: <p:input type="text" name="customer.fullName" size="35"/><br/>
+Age: <p:input type="text" name="customer.age"/><br/>
 Salary: <p:input type="text" name="customer.salary" size="35"/><br/>
 Birth day: <p:input name="customer.birthDay" size="35" placeholder="mm-dd-yyyy"/><br/>
 Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/> 
