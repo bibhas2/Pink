@@ -24,6 +24,7 @@ Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
  
 Name: <p:input type="text" name="customer.fullName" size="35"/><br/>
 Salary: <p:input type="text" name="customer.salary" size="35"/><br/>
+Birth day: <p:input name="customer.birthDay" size="35" placeholder="mm-dd-yyyy"/><br/>
 Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/> 
 <p:input type="radio" name="customer.level" value="S" label="Silver"/>
 <p:input type="radio" name="customer.level" value="B" label="Bronze"/>
@@ -32,7 +33,7 @@ Level: <p:input type="radio" name="customer.level" value="G" label="Gold"/>
     label="Has shopped in last 6 months"/><br/>
 <p:input type="checkbox" name="customer.residenceState" value="NY" 
     label="New York Resident"/><br/>
-    
+
 <input type="submit" value="Add Customer"/>
 </p:form>
 </body>

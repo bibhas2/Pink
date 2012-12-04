@@ -1,5 +1,8 @@
 package com.mobiarch.nf.test;
 
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.mobiarch.nf.Format;
@@ -16,6 +19,9 @@ public class Customer {
 	private int age;
 	private boolean active = false;
     private String residenceState;
+    @Format(pattern="MM-dd-yyyy", message="Please enter a date in the mm-dd-yyyy format")
+    @NotNull(message="Birth day is mandatory")
+    private Date birthDay;
     
 	@Format(pattern="#.##", message="Please enter a valid salary")
 	private float salary;
@@ -89,5 +95,10 @@ public class Customer {
 	public void setResidenceState(String residenceState) {
 		this.residenceState = residenceState;
 	}
-	
+	public Date getBirthDay() {
+		return birthDay;
+	}
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
+	}
 }

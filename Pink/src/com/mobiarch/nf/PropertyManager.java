@@ -5,13 +5,15 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -88,13 +90,13 @@ public class PropertyManager {
 		if (desc.getPropertyType().isArray()) {
 			Object newArray = Array.newInstance(desc.getPropertyType().getComponentType(), values.length);
 			for (int i = 0; i < values.length; ++i) {
-				Object convertedValue = convertFromString(values[i], desc.getPropertyType().getComponentType());
+				Object convertedValue = convertFromString(values[i], desc.getPropertyType().getComponentType(), desc);
 				Array.set(newArray, i, convertedValue);
 			}
 			desc.getWriteMethod().invoke(target, newArray);
 		} else {
 			try {
-				Object arg = convertFromString(values[0], desc.getPropertyType());
+				Object arg = convertFromString(values[0], desc.getPropertyType(), desc);
 				desc.getWriteMethod().invoke(target, arg);
 				validateProperty(targetClass, desc.getName(), arg);
 			} catch (ParseException pe) {
@@ -104,7 +106,7 @@ public class PropertyManager {
 				if (fmt != null) {
 					msg = fmt.message();
 				}
-				if (msg == null) {
+				if (msg == null || msg.length() == 0) {
 					msg = "Invalid input format for " + desc.getName();
 				}
 				PropertyViolation pv = new PropertyViolation(msg, desc.getName());
@@ -213,10 +215,16 @@ public class PropertyManager {
 		return map;
 	}
 
-	public Object convertFromString(String str, Class<?> type) throws ParseException, UnsupportedDataTypeException {
+	public Object convertFromString(String str, Class<?> type, PropertyDescriptor desc) throws ParseException, UnsupportedDataTypeException {
+		Format fmt = (Format) desc.getValue(FORMAT_ANNOTATION);
+		String formatStr = null;
 		Context ctx = Context.getContext();
 		NumberFormat nFmt = null;
 		
+		if (fmt != null) {
+			formatStr = fmt.pattern();
+		}
+
 		if (type == String.class) {
 			return str;
 		} else if (type == Integer.class || type == int.class) {
@@ -234,11 +242,35 @@ public class PropertyManager {
 		} else if (type == Boolean.class || type == boolean.class) {
 			//Only case insensitive "true" evaluates to true. All else is false.
 			return new Boolean(str);
+		} else if (type == java.util.Date.class) {
+			if (str == null || str.length() == 0) {
+				return null;
+			}
+			return stringToDate(str, formatStr, ctx);
+		} else if (type == java.sql.Date.class) {
+			if (str == null || str.length() == 0) {
+				return null;
+			}
+			java.util.Date d = stringToDate(str, formatStr, ctx);
+			
+			return new java.sql.Date(d.getTime());
 		} else {
 			throw new UnsupportedDataTypeException("Can not convert string to: " + type.getName());
 		}
 	}
 	
+	private java.util.Date stringToDate(String str, String formatStr, Context ctx) throws ParseException {
+		if (formatStr == null) {
+			DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, ctx.getLocale());
+			
+			return df.parse(str);
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat(formatStr, ctx.getLocale());
+			
+			return sdf.parse(str);
+		}
+	}
+
 	public String convertToString(Object o, PropertyDescriptor desc) {
 		String val = "";
 		Format fmt = (Format) desc.getValue(FORMAT_ANNOTATION);
@@ -281,8 +313,27 @@ public class PropertyManager {
 				}
 				return nFmt.format(o);
 			}
+		} else if (cls == java.util.Date.class) {
+			return dateToString((java.util.Date) o, formatStr);
+		} else if (cls == java.sql.Date.class) {
+			java.util.Date d = new java.util.Date(((java.sql.Date) o).getTime());
+			return dateToString(d, formatStr);
 		}
 		
 		return o.toString();
+	}
+
+	private String dateToString(java.util.Date d, String formatStr) {
+		Context ctx = Context.getContext();
+		
+		if (formatStr == null) {
+			DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, ctx.getLocale());
+			
+			return df.format(d);
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat(formatStr, ctx.getLocale());
+			
+			return sdf.format(d);
+		}
 	}
 }
