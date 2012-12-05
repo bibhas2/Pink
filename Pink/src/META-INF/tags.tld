@@ -23,6 +23,10 @@ http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
 		<path>/META-INF/tags/select.tag</path>
 	</tag-file>		
 	<tag-file>
+		<name>option</name>
+		<path>/META-INF/tags/option.tag</path>
+	</tag-file>		
+	<tag-file>
 		<name>textarea</name>
 		<path>/META-INF/tags/textarea.tag</path>
 	</tag-file>		

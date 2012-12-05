@@ -1,5 +1,6 @@
 package com.mobiarch.nf.test;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -101,5 +102,9 @@ public class Customer {
 	}
 	public void setBirthDay(Date birthDay) {
 		this.birthDay = birthDay;
+	}
+	public String getBirthdayFormatted() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+		return sdf.format(birthDay);
 	}
 }
