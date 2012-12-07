@@ -226,7 +226,7 @@ public class Processor {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	private Object invokeMethod(MethodInfo mi, Object o)
+	public Object invokeMethod(MethodInfo mi, Object o)
 			throws NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException {
 		logger.fine("Invoking method: " + mi.getMethod().getName());
@@ -374,7 +374,7 @@ public class Processor {
 	 * 
 	 * @throws IOException
 	 */
-	private void redirect(String beanName, String outcome) throws IOException {
+	public void redirect(String beanName, String outcome) throws IOException {
 		if (outcome.startsWith("/")) {
 			outcome = context.getRequest().getContextPath()
 					+ context.getRequest().getServletPath()
