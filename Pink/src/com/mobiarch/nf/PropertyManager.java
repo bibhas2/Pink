@@ -3,6 +3,8 @@ package com.mobiarch.nf;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -19,6 +21,7 @@ import java.util.logging.Logger;
 
 import javax.activation.UnsupportedDataTypeException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -57,6 +60,18 @@ public class PropertyManager {
 			String paramValue[] = {pi.getPathParameters().get(i)};
 			
 			setProperty(o, cls, descMap, paramName, paramValue);
+		}
+		
+		//Transfer multi-part data
+		String contentType = request.getContentType();
+		
+		if (contentType != null && contentType.startsWith("multipart/form-data")) {
+			logger.fine("Multi-part request is detected.");
+			Iterator<Part> partIter = request.getParts().iterator();
+			while (partIter.hasNext()) {
+				Part part = partIter.next();
+				setMultipartValue(o, cls, descMap, part.getName(), part);
+			}
 		}
 	}
 
@@ -113,6 +128,53 @@ public class PropertyManager {
 				Context.getContext().addViolation(pv);
 			}
 		}
+	}
+	public void setMultipartValue(Object o, Class<?> cls, Map<String, PropertyDescriptor> descMap, String name,
+			Part mpPart) throws Exception {
+		logger.fine("Setting multi-part property: " + name);
+		
+		String parts[] = name.split("\\.");
+		Object target = o;
+		Map<String, PropertyDescriptor> targetDescMap = descMap;
+		Class<?> targetClass = cls;
+		int idx = 0;
+		
+		while (idx < parts.length - 1) {
+			String propName = parts[idx];
+			logger.fine("Resolving target: " + propName);
+			target = getProperty(target, targetDescMap.get(propName), propName);
+			targetClass = target.getClass();
+			targetDescMap = getPropertyMap(targetClass);
+			++idx;
+		}
+		
+		name = parts[idx];
+		PropertyDescriptor desc = targetDescMap.get(name);
+		
+		if (desc == null) {
+			logger.fine("Invalid property name: " + name);
+			return;
+		}
+		logger.fine("Setting final multi-part property: " + name);
+		if (desc.getPropertyType() == Part.class) {
+			desc.getWriteMethod().invoke(target, mpPart);
+		} else if (desc.getPropertyType() == java.io.InputStream.class) {
+			desc.getWriteMethod().invoke(target, mpPart.getInputStream());
+		} else {
+			String values[] = {getPartValue(mpPart)};
+			setProperty(target, targetClass, targetDescMap, name, values);
+		}
+	}
+
+	public String getPartValue(Part part) throws Exception {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				part.getInputStream(), "UTF-8"));
+		StringBuilder value = new StringBuilder();
+		char[] buffer = new char[256];
+		for (int length = 0; (length = reader.read(buffer)) > 0;) {
+			value.append(buffer, 0, length);
+		}
+		return value.toString();
 	}
 
 	public void validateProperty(Class<?> cls, String name, Object value) {
