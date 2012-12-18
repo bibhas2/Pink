@@ -21,7 +21,8 @@ public class CartController extends Controller {
 	
 	int orderId;
 	int cartItemId;
-	int quantity;
+	int productId;
+	int quantity = 1;
 	boolean sameAsShipping = false;
 	
 	@EJB
@@ -32,11 +33,11 @@ public class CartController extends Controller {
 	@Inject
 	EphemeralCheckoutData payment;
 	
-	public void addToCart(int productId, int quantity) {
-		int cartId = cmgr.addToCart(getCartId(), productId, quantity);
-		
-		setCartId(cartId);
-	}
+	/**
+	 * Default method. Shows the shopping cart.
+	 * 
+	 * @return
+	 */
 	public String index() {
 		int cartId = getCartId();
 		
@@ -50,6 +51,15 @@ public class CartController extends Controller {
 		}
 		return "cart";
 	}
+
+	public String add() {
+		int cartId = cmgr.addToCart(getCartId(), productId, quantity);
+		
+		setCartId(cartId);
+		
+		return ""; //index
+	}
+
 	public String summary() {
 		int cartId = getCartId();
 		
@@ -204,5 +214,11 @@ public class CartController extends Controller {
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}
+	public int getProductId() {
+		return productId;
+	}
+	public void setProductId(int productId) {
+		this.productId = productId;
 	}
 }

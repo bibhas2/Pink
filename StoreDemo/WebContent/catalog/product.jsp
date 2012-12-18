@@ -6,7 +6,7 @@
 <jsp:attribute name="body">
 <h2>${catalog.product.name}</h2>
 <p>${catalog.product.description}</p>
-<p:form action="catalog/addToCart">
+<p:form action="cart/add">
 <p:input type="hidden" name="productId"/>
 <p:input name="quantity" style="width: 35px; margin-bottom: 0px"/>
 <input type="submit" class="btn btn-primary" value="Add to Cart"/>

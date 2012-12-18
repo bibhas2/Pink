@@ -18,7 +18,6 @@ public class CatalogController extends Controller {
 	@EJB
 	CatalogManager cmgr;
 	int productId;
-	int quantity = 1;
 
 	@Inject
 	CartController cartController;
@@ -29,6 +28,11 @@ public class CatalogController extends Controller {
 	@Path("/product/productId")
 	public String show() {
 		product = cmgr.getProduct(productId);
+		/*
+		 * An example of how a controller renders a form (CatalogController)
+		 * that is handled by another controller (CartController).
+		 */
+		cartController.setProductId(productId);
 		
 		return "product";
 	}
@@ -37,12 +41,6 @@ public class CatalogController extends Controller {
 		products = cmgr.getAllProducts();
 		
 		return "all_products";
-	}
-	
-	public String addToCart() {
-		cartController.addToCart(productId, quantity);
-		
-		return "/cart"; //index
 	}
 
 	public int getProductId() {
@@ -67,13 +65,5 @@ public class CatalogController extends Controller {
 
 	public void setProduct(Product product) {
 		this.product = product;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
 	}
 }

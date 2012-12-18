@@ -50,13 +50,13 @@ ${cart.payment.cardNumber} - ${cart.payment.cardType}<br/>
 Expiry: ${cart.payment.expMonth}/${cart.payment.expYear}
 <p/>
 <p>
-${cart.cart.shippingAddress.customerName}<br/>
-${cart.cart.shippingAddress.street1}<br/>
-${cart.cart.shippingAddress.street2}<br/>
-${cart.cart.shippingAddress.city}, ${cart.cart.shippingAddress.state}<br/>
-${cart.cart.shippingAddress.country}, ${cart.cart.shippingAddress.zip}<br/>
-${cart.cart.shippingAddress.email}<br/>
-${cart.cart.shippingAddress.phone}
+${cart.cart.billingAddress.customerName}<br/>
+${cart.cart.billingAddress.street1}<br/>
+${cart.cart.billingAddress.street2}<br/>
+${cart.cart.billingAddress.city}, ${cart.cart.billingAddress.state}<br/>
+${cart.cart.billingAddress.country}, ${cart.cart.billingAddress.zip}<br/>
+${cart.cart.billingAddress.email}<br/>
+${cart.cart.billingAddress.phone}
 </p>
 
 <p><br/>
