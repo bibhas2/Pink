@@ -1,0 +1,8 @@
+A sample online retail store application to demonstrate how to build applications using Pink.
+
+Steps to setup a database:
+
+- Create a MySQL database.
+- Load the schema from Supporting/Data/schema.sql.
+- Create a data source for the database in your server.
+- Open src/META-INF/persistence.xml and enter the JNDI name of the data source in <jta-data-source>.
