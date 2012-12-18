@@ -6,3 +6,7 @@ Steps to setup a database:
 - Load the schema from Supporting/Data/schema.sql.
 - Create a data source for the database in your server.
 - Open src/META-INF/persistence.xml and enter the JNDI name of the data source in <jta-data-source>.
+
+Launch the site using this URL:
+
+http://localhost:8080/StoreDemo/app/catalog
