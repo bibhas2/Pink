@@ -23,7 +23,7 @@ if (items == null) {
 	//rendered by <p:option> tag.
 	if (val != null) {
 		request.setAttribute("selectValue", val);
-		request.setAttribute("selectValueDesc", pm.getPropertyMap(cls).get(name));
+		request.setAttribute("selectValueDesc", pm.getPropertyDescriptor(cls, name));
 	}
 }
 %>

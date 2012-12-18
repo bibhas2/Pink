@@ -234,6 +234,34 @@ public class PropertyManager {
 		}
 	}
 
+	/**
+	 * Returns the descriptor of a potentially nested property.
+	 * 
+	 * @param cls - The root owner of the property.
+	 * @param name - The name of the property which may be nested (contain ".").
+	 * @return The descriptor of the property. If this is a nested property, the descriptor
+	 * belongs to the nested bean that actually carries the property.
+	 * @throws Exception
+	 */
+	public PropertyDescriptor getPropertyDescriptor(Class<?> cls, String name) throws Exception {
+		String parts[] = name.split("\\.");
+		Class<?> targetClass = cls;
+		PropertyDescriptor desc = null;
+		
+		for (int idx = 0; idx < parts.length; ++idx) {
+			String propName = parts[idx];
+			logger.fine("Resolving target: " + propName);
+			Map<String, PropertyDescriptor> targetDescMap = getPropertyMap(targetClass);
+			desc = targetDescMap.get(propName);
+			if (desc == null) {
+				throw new IllegalArgumentException("Invalid property name: " + propName);
+			}
+			targetClass = desc.getPropertyType();
+		}
+		
+		return desc;
+	}
+
 	public Object getProperty(Class<?> cls, Object o, String name) throws Exception {
 		logger.fine("Default getProperty called");
 		return getProperty(cls, o, name, true);

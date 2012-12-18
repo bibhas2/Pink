@@ -13,6 +13,7 @@ import com.mobiarch.nf.Controller;
 public class CarController extends Controller {
 	ArrayList<CarModel> availableModels;
 	int selectedModel[];
+	CarModel carModel = new CarModel(0, null);
 	
 	@PostConstruct
 	public void init() {
@@ -42,5 +43,18 @@ public class CarController extends Controller {
 		}
 		
 		return "index";
+	}
+	public String makeNestedSelection() {
+		System.out.println("Selected model: " + carModel.id);
+		
+		return "index";
+	}
+
+	public CarModel getCarModel() {
+		return carModel;
+	}
+
+	public void setCarModel(CarModel carModel) {
+		this.carModel = carModel;
 	}
 }
