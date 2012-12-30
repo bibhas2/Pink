@@ -19,7 +19,6 @@ public class CartController extends Controller {
 	Cart cart;
 	Address address = new Address();
 	
-	int orderId;
 	int cartItemId;
 	int productId;
 	int quantity = 1;
@@ -39,7 +38,7 @@ public class CartController extends Controller {
 	 * @return
 	 */
 	public String index() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		
 		if (cartId == 0) {
 			//No cart
@@ -53,15 +52,15 @@ public class CartController extends Controller {
 	}
 
 	public String add() {
-		int cartId = cmgr.addToCart(getCartId(), productId, quantity);
+		int cartId = cmgr.addToCart(payment.getCartId(), productId, quantity);
 		
-		setCartId(cartId);
+		payment.setCartId(cartId);
 		
 		return ""; //index
 	}
 
 	public String summary() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		
 		if (cartId == 0) {
 			//No cart
@@ -75,25 +74,33 @@ public class CartController extends Controller {
 	}
 
 	public String update() {
-		int cartId = getCartId();
-		
+		int cartId = payment.getCartId();
+		if (cartId == 0) {
+			return ""; //Show empty shop cart
+		}
 		cmgr.updateQuantity(cartId, cartItemId, quantity);
 		
 		return "";
 	}
 	@Path("cartItemId")
 	public String delete() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		
+		if (cartId == 0) {
+			return "@"; //Show empty shop cart
+		}
 		cmgr.deleteCartItem(cartId, cartItemId);
 		
 		return "@";
 	}
 	
 	public String shipping() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		
 		if (!context.isPostBack()) {
+			if (cartId == 0) {
+				return "@"; //Show empty shop cart
+			}
 			address = cmgr.getShippingAddress(cartId);
 			if (address == null) {
 				address = new Address();
@@ -101,6 +108,9 @@ public class CartController extends Controller {
 			
 			return "shipping";
 		} else {
+			if (cartId == 0) {
+				return ""; //Show empty shop cart
+			}
 			if (context.isValidationFailed()) {
 				return "shipping";
 			}
@@ -110,13 +120,19 @@ public class CartController extends Controller {
 		}
 	}
 	public String billing() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		if (!context.isPostBack()) {
+			if (cartId == 0) {
+				return "@"; //Show empty shop cart
+			}
 			sameAsShipping = payment.isUseShipingAddressForBilling();
 			address = cmgr.getBillingAddress(cartId);
 			
 			return "billing";
 		} else {
+			if (cartId == 0) {
+				return ""; //Show empty shop cart
+			}
 			if (context.isValidationFailed()) {
 				return "billing";
 			}
@@ -133,46 +149,31 @@ public class CartController extends Controller {
 	}
 	
 	public String place() {
-		int cartId = getCartId();
+		int cartId = payment.getCartId();
 		
+		if (cartId == 0) {
+			return ""; //Show empty shop cart
+		}
+
 		try {
 			cmgr.placeOrder(cartId);
+			payment.setCartId(0);
+			payment.setLastOrderId(cartId);
 		} catch (Exception e) {
 			context.addViolation(new PropertyViolation(e.getMessage(), ""));
 			
 			return "summary";
 		}
-		//Clear ephemeral data in session
-		setCartId(0);
-		payment.reset();
-		
-		return "confirmation/" + cartId;
-	}
-	
-	@Path("orderId")
-	public String confirmation() {
-		/*
-		 * TODO: Need to do a security check to make sure that
-		 * the user owns this order.
-		 */
-		
-		
-		cart = cmgr.getCartPopulated(orderId);
 		
 		return "confirmation";
 	}
-
-	public int getCartId() {
-		Integer cartId = (Integer) context.getRequest().getSession().getAttribute("cartId");
+	
+	public String confirmation() {
+		int lastOrderId = payment.getLastOrderId();
 		
-		if (cartId != null) {
-			return cartId.intValue();
-		}
-		return 0;
-	}
-
-	public void setCartId(int cartId) {
-		context.getRequest().getSession().setAttribute("cartId", new Integer(cartId));
+		cart = cmgr.getCartPopulated(lastOrderId);
+		
+		return "confirmation";
 	}
 
 	public Cart getCart() {
@@ -208,12 +209,6 @@ public class CartController extends Controller {
 	}
 	public void setSameAsShipping(boolean sameAsShipping) {
 		this.sameAsShipping = sameAsShipping;
-	}
-	public int getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
 	}
 	public int getProductId() {
 		return productId;

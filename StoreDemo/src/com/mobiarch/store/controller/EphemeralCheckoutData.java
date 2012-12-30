@@ -31,6 +31,9 @@ public class EphemeralCheckoutData implements Serializable {
 	private String securityCode;
 	private boolean useShipingAddressForBilling = false;
 	
+	private int cartId;
+	private int lastOrderId;
+	
 	public String getCardType() {
 		return cardType;
 	}
@@ -69,5 +72,17 @@ public class EphemeralCheckoutData implements Serializable {
 	}
 	public void reset() {
 		useShipingAddressForBilling = false;
+	}
+	public int getCartId() {
+		return cartId;
+	}
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
+	}
+	public int getLastOrderId() {
+		return lastOrderId;
+	}
+	public void setLastOrderId(int lastOrderId) {
+		this.lastOrderId = lastOrderId;
 	}
 }
