@@ -1,0 +1,8 @@
+This sample application shows how to upload file using Pink. 
+Two approaches are shown:
+    - Uisng multi-part form
+    - Using XMLHttpRequest Level 2.
+    
+After deploying the application to server, run this URL:
+
+http://localhost:8080/FileDemo/app/upload/
