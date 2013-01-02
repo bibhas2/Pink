@@ -132,6 +132,15 @@ public class PropertyManager {
 	public void setMultipartValue(Object o, Class<?> cls, Map<String, PropertyDescriptor> descMap, String name,
 			Part mpPart) throws Exception {
 		logger.fine("Setting multi-part property: " + name);
+		//Check if this Part has a file content
+		String disp = mpPart.getHeader("Content-Disposition");
+		if (disp == null) {
+			return;
+		}
+		if (disp.contains("filename=") == false) {
+			logger.fine("Skipping non-file part: " + name);
+			return;
+		}
 		
 		String parts[] = name.split("\\.");
 		Object target = o;
@@ -161,8 +170,7 @@ public class PropertyManager {
 		} else if (desc.getPropertyType() == java.io.InputStream.class) {
 			desc.getWriteMethod().invoke(target, mpPart.getInputStream());
 		} else {
-			String values[] = {getPartValue(mpPart)};
-			setProperty(target, targetClass, targetDescMap, name, values);
+			throw new UnsupportedDataTypeException("Input type file can be bound to Part of InputStream only.");
 		}
 	}
 
