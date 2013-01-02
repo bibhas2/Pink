@@ -13,9 +13,9 @@ import com.mobiarch.store.model.Address;
 import com.mobiarch.store.model.Cart;
 import com.mobiarch.store.model.CartManager;
 
-@Named("cart")
+@Named("checkout")
 @RequestScoped
-public class CartController extends Controller {
+public class CheckoutController extends Controller {
 	Cart cart;
 	Address address = new Address();
 	
@@ -33,11 +33,11 @@ public class CartController extends Controller {
 	EphemeralCheckoutData payment;
 	
 	/**
-	 * Default method. Shows the shopping cart.
+	 * Shows the shopping cart.
 	 * 
 	 * @return
 	 */
-	public String index() {
+	public String cart() {
 		int cartId = payment.getCartId();
 		
 		if (cartId == 0) {
@@ -56,7 +56,7 @@ public class CartController extends Controller {
 		
 		payment.setCartId(cartId);
 		
-		return ""; //index
+		return "cart"; //index
 	}
 
 	public String summary() {
@@ -80,18 +80,19 @@ public class CartController extends Controller {
 		}
 		cmgr.updateQuantity(cartId, cartItemId, quantity);
 		
-		return "";
+		return "cart";
 	}
+	
 	@Path("cartItemId")
 	public String delete() {
 		int cartId = payment.getCartId();
 		
 		if (cartId == 0) {
-			return "@"; //Show empty shop cart
+			return "@cart"; //Show empty shop cart
 		}
 		cmgr.deleteCartItem(cartId, cartItemId);
 		
-		return "@";
+		return "@cart";
 	}
 	
 	public String shipping() {
@@ -99,7 +100,7 @@ public class CartController extends Controller {
 		
 		if (!context.isPostBack()) {
 			if (cartId == 0) {
-				return "@"; //Show empty shop cart
+				return "@cart"; //Show empty shop cart
 			}
 			address = cmgr.getShippingAddress(cartId);
 			if (address == null) {
@@ -109,7 +110,7 @@ public class CartController extends Controller {
 			return "shipping";
 		} else {
 			if (cartId == 0) {
-				return ""; //Show empty shop cart
+				return "cart"; //Show empty shop cart
 			}
 			if (context.isValidationFailed()) {
 				return "shipping";
@@ -123,7 +124,7 @@ public class CartController extends Controller {
 		int cartId = payment.getCartId();
 		if (!context.isPostBack()) {
 			if (cartId == 0) {
-				return "@"; //Show empty shop cart
+				return "@cart"; //Show empty shop cart
 			}
 			sameAsShipping = payment.isUseShipingAddressForBilling();
 			address = cmgr.getBillingAddress(cartId);
@@ -131,7 +132,7 @@ public class CartController extends Controller {
 			return "billing";
 		} else {
 			if (cartId == 0) {
-				return ""; //Show empty shop cart
+				return "cart"; //Show empty shop cart
 			}
 			if (context.isValidationFailed()) {
 				return "billing";
@@ -148,11 +149,12 @@ public class CartController extends Controller {
 		}
 	}
 	
-	public String place() {
+	@Path("/place-order")
+	public String placeOrder() {
 		int cartId = payment.getCartId();
 		
 		if (cartId == 0) {
-			return ""; //Show empty shop cart
+			return "cart"; //Show empty shop cart
 		}
 
 		try {
@@ -170,6 +172,10 @@ public class CartController extends Controller {
 	
 	public String confirmation() {
 		int lastOrderId = payment.getLastOrderId();
+		
+		if (lastOrderId == 0) {
+			return "@cart"; //Empty cart
+		}
 		
 		cart = cmgr.getCartPopulated(lastOrderId);
 		

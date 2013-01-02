@@ -8,7 +8,7 @@
 <h2>Shopping Cart</h2>
 
 <table class="table table-striped">
-<c:forEach items="${cart.cart.cartItems}" var="item">
+<c:forEach items="${checkout.cart.cartItems}" var="item">
 <tr _style="border-bottom: solid 1px #cfcfcf">
 <td width="250px">
 <p><a href="/StoreDemo/app/catalog/product/${item.product.id}">${item.product.name}</a></p>
@@ -16,27 +16,27 @@
 </td>
 <td>
 <p>Total: $<fmt:formatNumber value="${item.itemTotal}" maxFractionDigits="2"/></p>
-<p:form action="cart/update">
-<c:set target="${cart}" property="quantity" value="${item.quantity}"/>
-<c:set target="${cart}" property="cartItemId" value="${item.id}"/>
+<p:form action="checkout/update">
+<c:set target="${checkout}" property="quantity" value="${item.quantity}"/>
+<c:set target="${checkout}" property="cartItemId" value="${item.id}"/>
 <p:input type="hidden" name="cartItemId"/>
 <p:input name="quantity" style="width: 35px; margin-bottom: 0px"/> 
 <input type="submit" class="btn" value="Update"/>
-<a href="/StoreDemo/app/cart/delete/${item.id}" class="btn btn-danger">Delete</a>
+<a href="/StoreDemo/app/checkout/delete/${item.id}" class="btn btn-danger">Delete</a>
 </p:form>
 </td>
 </tr>
 </c:forEach>
 <tr>
-<td>Tax</td><td>$<fmt:formatNumber value="${cart.cart.productTax}" maxFractionDigits="2"/></td>
+<td>Tax</td><td>$<fmt:formatNumber value="${checkout.cart.productTax}" maxFractionDigits="2"/></td>
 </tr>
 <tr _style="border-bottom: solid 1px #cfcfcf">
-<td>Shipping</td><td>$<fmt:formatNumber value="${cart.cart.shipping}" maxFractionDigits="2"/></td>
+<td>Shipping</td><td>$<fmt:formatNumber value="${checkout.cart.shipping}" maxFractionDigits="2"/></td>
 </tr>
 <tr>
-<td>Grand total</td><td><h4>$<fmt:formatNumber value="${cart.cart.grandTotal}" maxFractionDigits="2"/></h4></td>
+<td>Grand total</td><td><h4>$<fmt:formatNumber value="${checkout.cart.grandTotal}" maxFractionDigits="2"/></h4></td>
 </tr>
 </table>
-<p><br/><a href="/StoreDemo/app/catalog/" class="btn">Back to shopping</a> <a href="/StoreDemo/app/cart/shipping" class="btn btn-success">Checkout</a></p>
+<p><br/><a href="/StoreDemo/app/catalog/" class="btn">Back to shopping</a> <a href="/StoreDemo/app/checkout/shipping" class="btn btn-success">Checkout</a></p>
 </jsp:attribute>
 </t:starter-template>

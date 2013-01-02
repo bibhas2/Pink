@@ -9,7 +9,7 @@
 
 <p:errors style="color: red"/>
 
-<p:form action="cart/shipping">
+<p:form action="checkout/shipping">
 Name:<br/>
 <p:input name="address.customerName"/><br/> 
 Street address:<br/>
@@ -29,7 +29,7 @@ E-mail:<br/>
 Phone:<br/>
 <p:input name="address.phone"/><br/><br/>
 
-<a href="/StoreDemo/app/cart/" class="btn">Back to Cart</a> <input type="submit" value="Next" class="btn btn-success"/>
+<a href="/StoreDemo/app/checkout/cart" class="btn">Back to Cart</a> <input type="submit" value="Next" class="btn btn-success"/>
 </p:form>
 </jsp:attribute>
 </t:starter-template>

@@ -20,7 +20,7 @@ public class CatalogController extends Controller {
 	int productId;
 
 	@Inject
-	CartController cartController;
+	CheckoutController cartController;
 	
 	List<Product> products;
 	Product product;

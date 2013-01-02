@@ -41,7 +41,7 @@
           <a class="brand" href="/StoreDemo/app/catalog/">Pink Demo Store</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/StoreDemo/app/cart/">Cart</a></li>
+              <li><a href="/StoreDemo/app/checkout/cart">Cart</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
             <form class="navbar-form pull-right">

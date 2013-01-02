@@ -9,7 +9,7 @@
 
 <p:errors style="color: red"/>
 
-<p:form action="cart/billing" id="billingForm">
+<p:form action="checkout/billing" id="billingForm">
 <legend>Credit Card</legend>
 Card Type:<br/>
 <p:select name="payment.cardType">
@@ -50,7 +50,7 @@ Phone:<br/>
 <p:input name="address.phone"/><br/>
 </div>
 
-<a href="/StoreDemo/app/cart/" class="btn">Back to Cart</a> <input type="submit" value="Next" class="btn btn-success"/>
+<a href="/StoreDemo/app/checkout/cart" class="btn">Back to Cart</a> <input type="submit" value="Next" class="btn btn-success"/>
 </p:form>
 
 <script>
