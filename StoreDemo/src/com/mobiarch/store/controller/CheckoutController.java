@@ -76,7 +76,7 @@ public class CheckoutController extends Controller {
 	public String update() {
 		int cartId = payment.getCartId();
 		if (cartId == 0) {
-			return ""; //Show empty shop cart
+			return "cart"; //Show empty shop cart
 		}
 		cmgr.updateQuantity(cartId, cartItemId, quantity);
 		
@@ -98,10 +98,11 @@ public class CheckoutController extends Controller {
 	public String shipping() {
 		int cartId = payment.getCartId();
 		
+		if (cartId == 0) {
+			return "@cart"; //Show empty shop cart
+		}
+
 		if (!context.isPostBack()) {
-			if (cartId == 0) {
-				return "@cart"; //Show empty shop cart
-			}
 			address = cmgr.getShippingAddress(cartId);
 			if (address == null) {
 				address = new Address();
@@ -109,9 +110,6 @@ public class CheckoutController extends Controller {
 			
 			return "shipping";
 		} else {
-			if (cartId == 0) {
-				return "cart"; //Show empty shop cart
-			}
 			if (context.isValidationFailed()) {
 				return "shipping";
 			}
@@ -120,20 +118,20 @@ public class CheckoutController extends Controller {
 			return "billing";
 		}
 	}
+	
 	public String billing() {
 		int cartId = payment.getCartId();
+		
+		if (cartId == 0) {
+			return "@cart"; //Show empty shop cart
+		}
+
 		if (!context.isPostBack()) {
-			if (cartId == 0) {
-				return "@cart"; //Show empty shop cart
-			}
 			sameAsShipping = payment.isUseShipingAddressForBilling();
 			address = cmgr.getBillingAddress(cartId);
 			
 			return "billing";
 		} else {
-			if (cartId == 0) {
-				return "cart"; //Show empty shop cart
-			}
 			if (context.isValidationFailed()) {
 				return "billing";
 			}
