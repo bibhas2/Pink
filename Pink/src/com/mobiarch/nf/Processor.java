@@ -321,8 +321,7 @@ public class Processor {
 					// outcome = beanName + "/" + outcome;
 					redirect(beanName, outcomeStr);
 				} else if (outcomeStr.startsWith("@")) {
-					outcomeStr = outcomeStr.substring(1);
-					// outcome = beanName + "/" + outcome;
+					//A redirect is forced where a forward is normally used
 					redirect(beanName, outcomeStr);
 				} else {
 					// Do a forward
@@ -375,6 +374,10 @@ public class Processor {
 	 * @throws IOException
 	 */
 	public void redirect(String beanName, String outcome) throws IOException {
+		if (outcome.startsWith("@")) {
+			outcome = outcome.substring(1);
+		}
+		
 		if (outcome.startsWith("/")) {
 			outcome = context.getRequest().getContextPath()
 					+ context.getRequest().getServletPath()
