@@ -6,6 +6,6 @@
 <jsp:attribute name="body">
 <h2>Shopping Cart</h2>
 <p>Your cart is empty.</p>
-<p><a href="/StoreDemo/store/catalog/" class="btn">Back to shopping</a></p>
+<p><p:a href="catalog" class="btn">Back to shopping</p:a></p>
 </jsp:attribute>
 </t:starter-template>

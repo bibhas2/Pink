@@ -9,7 +9,7 @@
 	<div class="span6">
 	<h2>${product.name}</h2>
 	<p>${product.description}</p>
-	<p><a class="btn" href="/StoreDemo/store/catalog/product/${product.id}">View details</a></p>
+	<p><p:a class="btn" href="catalog/product/${product.id}">View details</p:a></p>
 	</div>
 	</c:forEach>
 </div>

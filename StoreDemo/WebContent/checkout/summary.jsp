@@ -12,7 +12,7 @@
 <c:forEach items="${checkout.cart.cartItems}" var="item">
 <tr style="border-bottom: solid 1px #cfcfcf">
 <td width="250px">
-<p><a href="/StoreDemo/store/catalog/product/${item.product.id}">${item.product.name}</a></p>
+<p><p:a href="catalog/product/${item.product.id}">${item.product.name}</p:a></p>
 <p>${item.product.description}</p>
 </td>
 <td>
@@ -61,7 +61,7 @@ ${checkout.cart.billingAddress.phone}
 
 <p><br/>
 <p:form action="checkout/place-order">
-<a href="/StoreDemo/store/catalog/" class="btn">Back to shopping</a> <input type="submit" class="btn btn-success btn-large" value="Place Order"/>
+<p:a href="store/catalog" class="btn">Back to shopping</p:a> <input type="submit" class="btn btn-success btn-large" value="Place Order"/>
 </p:form>
 </p>
 </jsp:attribute>

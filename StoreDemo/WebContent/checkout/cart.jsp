@@ -11,7 +11,7 @@
 <c:forEach items="${checkout.cart.cartItems}" var="item">
 <tr _style="border-bottom: solid 1px #cfcfcf">
 <td width="250px">
-<p><a href="/StoreDemo/store/catalog/product/${item.product.id}">${item.product.name}</a></p>
+<p><p:a href="catalog/product/${item.product.id}">${item.product.name}</p:a></p>
 <p>${item.product.description}</p>
 </td>
 <td>
@@ -22,7 +22,7 @@
 <p:input type="hidden" name="cartItemId"/>
 <p:input name="quantity" style="width: 35px; margin-bottom: 0px"/> 
 <input type="submit" class="btn" value="Update"/>
-<a href="/StoreDemo/store/checkout/delete/${item.id}" class="btn btn-danger">Delete</a>
+<p:a href="checkout/delete/${item.id}" class="btn btn-danger">Delete</p:a>
 </p:form>
 </td>
 </tr>
@@ -37,6 +37,6 @@
 <td>Grand total</td><td><h4>$<fmt:formatNumber value="${checkout.cart.grandTotal}" maxFractionDigits="2"/></h4></td>
 </tr>
 </table>
-<p><br/><a href="/StoreDemo/store/catalog/" class="btn">Back to shopping</a> <a href="/StoreDemo/store/checkout/shipping" class="btn btn-success">Checkout</a></p>
+<p><br/><p:a href="catalog" class="btn">Back to shopping</p:a> <p:a href="checkout/shipping" class="btn btn-success">Checkout</p:a></p>
 </jsp:attribute>
 </t:starter-template>

@@ -50,7 +50,7 @@ Phone:<br/>
 <p:input name="address.phone"/><br/>
 </div>
 
-<a href="/StoreDemo/store/checkout/cart" class="btn">Back to Cart</a> <input type="submit" value="Next" class="btn btn-success"/>
+<p:a href="checkout/cart" class="btn">Back to Cart</p:a> <input type="submit" value="Next" class="btn btn-success"/>
 </p:form>
 
 <script>
