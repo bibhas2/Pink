@@ -12,7 +12,7 @@
 <c:forEach items="${checkout.cart.cartItems}" var="item">
 <tr style="border-bottom: solid 1px #cfcfcf">
 <td width="250px">
-<p><a href="/StoreDemo/app/catalog/product/${item.product.id}">${item.product.name}</a></p>
+<p><a href="/StoreDemo/store/catalog/product/${item.product.id}">${item.product.name}</a></p>
 <p>${item.product.description}</p>
 </td>
 <td>

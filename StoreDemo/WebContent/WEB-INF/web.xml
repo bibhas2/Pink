@@ -13,6 +13,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Pink Servlet</servlet-name>
-    <url-pattern>/app/*</url-pattern>
+    <url-pattern>/store/*</url-pattern>
   </servlet-mapping>
 </web-app>
