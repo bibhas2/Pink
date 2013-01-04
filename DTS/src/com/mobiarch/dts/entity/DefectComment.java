@@ -25,6 +25,9 @@ public class DefectComment implements Serializable {
 
 	private int userId;
 
+	@Transient
+	AppUser user;
+	
 	public DefectComment() {
 	}
 
@@ -66,6 +69,14 @@ public class DefectComment implements Serializable {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public AppUser getUser() {
+		return user;
+	}
+
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
 }

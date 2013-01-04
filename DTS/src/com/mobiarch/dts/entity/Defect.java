@@ -1,6 +1,8 @@
 package com.mobiarch.dts.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -42,6 +44,10 @@ public class Defect implements Serializable {
 	private AppUser originator;
 	@Transient
 	private Project project;
+	@Transient
+	List<DefectComment> commentList;
+	@Transient
+	List<DefectLog> logList;
 	
 	public Defect() {
 	}
@@ -140,5 +146,21 @@ public class Defect implements Serializable {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public List<DefectComment> getCommentList() {
+		return commentList;
+	}
+
+	public void setCommentList(List<DefectComment> commentList) {
+		this.commentList = commentList;
+	}
+
+	public List<DefectLog> getLogList() {
+		return logList;
+	}
+
+	public void setLogList(List<DefectLog> logList) {
+		this.logList = logList;
 	}
 }

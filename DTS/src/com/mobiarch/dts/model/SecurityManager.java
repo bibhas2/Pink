@@ -2,6 +2,7 @@ package com.mobiarch.dts.model;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -36,6 +37,12 @@ public class SecurityManager {
 			logger.log(Level.SEVERE, "Login failed", e);
 		}
 		return null;
+	}
+	
+	public List<AppUser> getAllUser() {
+		TypedQuery<AppUser> q = em.createQuery("select u from AppUser u order by fullName", AppUser.class);
+
+		return q.getResultList();
 	}
 	
 	private byte[] getPasswordHash(String password) throws Exception {

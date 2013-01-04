@@ -89,6 +89,7 @@ insert into DefectState (id) values ('Rejected');
 
 -- Default password is "admin"
 insert into AppUser (fullName, email, password) values ('Administrator', 'admin@example.com', x'D033E22AE348AEB5660FC2140AEC35850C4DA997');
+insert into AppUser (fullName, email, password) values ('John Doe', 'john.doe@example.com', x'D033E22AE348AEB5660FC2140AEC35850C4DA997');
 -- Add a few sample projects
 insert into Project (name, ownerId) values ('Public Web Site', (select id from AppUser where email='admin@example.com'));
 insert into Project (name, ownerId) values ('Online Store', (select id from AppUser where email='admin@example.com'));
