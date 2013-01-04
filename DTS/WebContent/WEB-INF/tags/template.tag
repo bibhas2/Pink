@@ -72,7 +72,7 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Defects</li>
-              <li><p:a href="defect/open">Open a defect</p:a></li>
+              <li><p:a href="defects/open">Open a defect</p:a></li>
               <li><a href="#">Search for defects</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>

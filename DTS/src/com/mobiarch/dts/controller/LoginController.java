@@ -41,7 +41,7 @@ public class LoginController extends Controller {
 			
 			session.setCurrentUser(user);
 			
-			return "/defect";
+			return "/defects";
 		} else {
 			return "login_form";
 		}

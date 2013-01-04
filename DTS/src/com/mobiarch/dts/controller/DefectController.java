@@ -13,8 +13,9 @@ import com.mobiarch.dts.model.DefectManager;
 import com.mobiarch.dts.model.SecurityManager;
 import com.mobiarch.nf.Context;
 import com.mobiarch.nf.Controller;
+import com.mobiarch.nf.Path;
 
-@Named("defect")
+@Named("defects")
 @RequestScoped
 public class DefectController extends Controller {
 	@EJB
@@ -48,7 +49,7 @@ public class DefectController extends Controller {
 			
 			dmgr.createDefect(defect);
 			
-			return null;
+			return "show/" + defect.getId();
 		} else {
 			//Display form
 			projectList = dmgr.getAllProject();
@@ -56,6 +57,21 @@ public class DefectController extends Controller {
 			
 			return "open_defect";
 		}
+	}
+	
+	@Path("defect.id")
+	public String show() {
+		if (noSession()) {
+			return "@/login";
+		}
+		
+		defect = dmgr.getDefectPopulated(defect.getId());
+		
+		if (defect == null) {
+			return "defect_not_found";
+		}
+		
+		return "view_defect";
 	}
 	
 	private boolean noSession() {

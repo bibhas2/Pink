@@ -36,6 +36,13 @@ public class Defect implements Serializable {
 
 	private String stateId;
 
+	@Transient
+	private AppUser owner;
+	@Transient
+	private AppUser originator;
+	@Transient
+	private Project project;
+	
 	public Defect() {
 	}
 
@@ -111,4 +118,27 @@ public class Defect implements Serializable {
 		this.stateId = stateId;
 	}
 
+	public AppUser getOwner() {
+		return owner;
+	}
+
+	public void setOwner(AppUser owner) {
+		this.owner = owner;
+	}
+
+	public AppUser getOriginator() {
+		return originator;
+	}
+
+	public void setOriginator(AppUser originator) {
+		this.originator = originator;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
 }

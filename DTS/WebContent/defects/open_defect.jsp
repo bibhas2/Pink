@@ -6,7 +6,7 @@
 <jsp:attribute name="body">
 <h3>Open a New Defect</h3>
 <p:errors class="text-error"/>
-<p:form class="form-horizontal" action="defect/open">
+<p:form class="form-horizontal" action="defects/open">
 	<div class="control-group">
 	    <label class="control-label">Project</label>
 	    <div class="controls">

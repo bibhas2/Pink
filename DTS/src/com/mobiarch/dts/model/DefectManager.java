@@ -68,4 +68,18 @@ public class DefectManager {
 		dl.setLastupdate(new Timestamp((new Date()).getTime()));
 		em.persist(dl);
 	}
+	
+	public Defect getDefectPopulated(int id) {
+		Defect d = em.find(Defect.class, id);
+		
+		if (d == null) {
+			return null;
+		}
+		
+		d.setOriginator(smgr.getUser(d.getOriginatorId()));
+		d.setOwner(smgr.getUser(d.getOwnerId()));
+		d.setProject(getProject(d.getProjectId()));
+		
+		return d;
+	}
 }
