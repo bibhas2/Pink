@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="DTS">
+	    <jta-data-source>java:/jdbc/MySqlDS2</jta-data-source>
+	    
+		<class>com.mobiarch.dts.entity.AppUser</class>
+		<class>com.mobiarch.dts.entity.Defect</class>
+		<class>com.mobiarch.dts.entity.DefectComment</class>
+		<class>com.mobiarch.dts.entity.DefectLog</class>
+		<class>com.mobiarch.dts.entity.Project</class>
+	</persistence-unit>
+</persistence>
