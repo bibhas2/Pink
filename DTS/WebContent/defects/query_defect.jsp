@@ -7,7 +7,7 @@
 <h3>Query Defect</h3>
 <p:errors class="text-error"/>
 <!-- Query type forms must use GET to generate display markup in response -->
-<p:form class="form-horizontal" action="defects/do-query" method="get">
+<p:form class="form-horizontal" action="defects/query" method="get">
 	<div class="control-group">
 	    <label class="control-label">Defect IDs</label>
 	    <div class="controls">

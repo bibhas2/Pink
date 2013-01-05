@@ -37,18 +37,12 @@ public class DefectController extends Controller {
 	private DefectQuery query = new DefectQuery();
 	private List<Defect> defectList;
 	
+	@SessionCheck
 	public String index() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		return "home";
 	}
+	@SessionCheck
 	public String open() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		if (context.isPostBack() && !context.isValidationFailed()) {
 			defect.setOriginatorId(session.getCurrentUser().getId());
 			defect.setOwnerId(session.getCurrentUser().getId());
@@ -65,12 +59,9 @@ public class DefectController extends Controller {
 		}
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String show() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		defect = dmgr.getDefectPopulated(defect.getId());
 		
 		if (defect == null) {
@@ -80,14 +71,16 @@ public class DefectController extends Controller {
 		return "view_defect";
 	}
 	
-	public String query() {
+	@SessionCheck
+	@Path("/query-form")
+	public String queryForm() {
 		userList = smgr.getAllUser();
 		projectList = dmgr.getAllProject();
 
 		return "query_defect";
 	}
-	@Path("/do-query")
-	public String doQuery() {
+	@SessionCheck
+	public String query() {
 		defectList = dmgr.getDefectQuery(query);
 		if (defectList.size() == 0) {
 			return "defect_not_found";
@@ -95,18 +88,17 @@ public class DefectController extends Controller {
 		return "query_result";
 	}
 	
+	@SessionCheck
 	@Path("/add-comment/defect.id")
 	public String addComment() {
 		dmgr.createComment(defect.getId(), commentText, session.getCurrentUser().getId());
 		
 		return "show/" + defect.getId();
 	}
+
+	@SessionCheck
 	@Path("defect.id")
 	public String edit() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		if (context.isPostBack()) {
 			dmgr.updateDefect(defect);
 			return "show/" + defect.getId();
@@ -118,12 +110,9 @@ public class DefectController extends Controller {
 		}
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String assign() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		if (context.isPostBack()) {
 			dmgr.assignDefect(defect.getId(), defect.getOwnerId());
 			return "show/" + defect.getId();
@@ -134,53 +123,38 @@ public class DefectController extends Controller {
 		}
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String accept() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		dmgr.acceptDefect(defect.getId());
 		
 		return "@show/" + defect.getId();
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String reject() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		dmgr.rejectDefect(defect.getId());
 		
 		return "@show/" + defect.getId();
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String complete() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		dmgr.completeDefect(defect.getId());
 		
 		return "@show/" + defect.getId();
 	}
 	
+	@SessionCheck
 	@Path("defect.id")
 	public String verify() {
-		if (noSession()) {
-			return "@/login";
-		}
-		
 		dmgr.verifyDefect(defect.getId());
 		
 		return "@show/" + defect.getId();
 	}
 	
-	private boolean noSession() {
-		return session == null || session.getCurrentUser() == null;
-	}
 	public List<Project> getProjectList() {
 		return projectList;
 	}
