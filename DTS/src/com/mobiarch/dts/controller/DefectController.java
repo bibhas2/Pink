@@ -11,6 +11,7 @@ import com.mobiarch.dts.entity.AppUser;
 import com.mobiarch.dts.entity.Defect;
 import com.mobiarch.dts.entity.Project;
 import com.mobiarch.dts.model.DefectManager;
+import com.mobiarch.dts.model.DefectQuery;
 import com.mobiarch.dts.model.SecurityManager;
 import com.mobiarch.nf.Context;
 import com.mobiarch.nf.Controller;
@@ -33,6 +34,8 @@ public class DefectController extends Controller {
 	private Defect defect = new Defect();
 	private String commentText;
 	private List<AppUser> userList;
+	private DefectQuery query = new DefectQuery();
+	private List<Defect> defectList;
 	
 	public String index() {
 		if (noSession()) {
@@ -75,6 +78,21 @@ public class DefectController extends Controller {
 		}
 		
 		return "view_defect";
+	}
+	
+	public String query() {
+		userList = smgr.getAllUser();
+		projectList = dmgr.getAllProject();
+
+		return "query_defect";
+	}
+	@Path("/do-query")
+	public String doQuery() {
+		defectList = dmgr.getDefectQuery(query);
+		if (defectList.size() == 0) {
+			return "defect_not_found";
+		}
+		return "query_result";
 	}
 	
 	@Path("/add-comment/defect.id")
@@ -177,5 +195,11 @@ public class DefectController extends Controller {
 	}
 	public List<AppUser> getUserList() {
 		return userList;
+	}
+	public DefectQuery getQuery() {
+		return query;
+	}
+	public List<Defect> getDefectList() {
+		return defectList;
 	}
 }

@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import com.mobiarch.dts.controller.SessionData;
@@ -123,7 +124,77 @@ public class DefectManager {
 	public Defect getDefect(int id) {
 		return em.find(Defect.class, id);
 	}
+	
+	public List<Defect> getDefectQuery(DefectQuery dq) {
+		StringBuffer sql = new StringBuffer();
+		
+		if (dq.getProjectId() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("projectId=" + dq.getProjectId());
+		}
+		if (dq.getOwnerId() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("ownerId=" + dq.getOwnerId());
+		}
+		if (dq.getOriginatorId() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("originatorId=" + dq.getOriginatorId());
+		}
+		if (dq.getSeverity() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("severity=" + dq.getSeverity());
+		}
+		if (dq.getPriority() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("priority=" + dq.getPriority());
+		}
 
+		if (dq.getState() != null && dq.getState().length > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			sql.append("stateid in (");
+			for (int i = 0; i < dq.getState().length; ++i) {
+				sql.append("'" + dq.getState()[i] + "'");
+				if (i < dq.getState().length - 1) {
+					sql.append(", ");
+				}
+			}
+			sql.append(")");
+		}
+		if (dq.getDefectIdList() != null && dq.getDefectIdList().length() > 0) {
+			if (sql.length() > 0) {
+				sql.append(" and ");
+			}
+			String ids[] = dq.getDefectIdList().split(",");
+			sql.append("id in (");
+			for (int i = 0; i < ids.length; ++i) {
+				sql.append(ids[i]);
+				if (i < ids.length - 1) {
+					sql.append(", ");
+				}
+			}
+			sql.append(")");
+		}	
+		
+		String whereClause = sql.toString();
+		logger.fine(whereClause);
+		String str = "select * from Defect" + (whereClause.length() > 0 ? (" where " + whereClause) : "");
+		Query q = em.createNativeQuery(str, Defect.class);
+		
+		return (List<Defect>) q.getResultList();
+	}
+	
 	public void createComment(int defectId, String commentText, int userId) {
 		DefectComment dc = new DefectComment();
 		
@@ -186,6 +257,7 @@ public class DefectManager {
 		}
 		
 		d.setStateId(STATE_COMPLETED);
+		d.setOwnerId(d.getOriginatorId());
 		
 		createDefectLog(d.getId(), "Defect completed", session.getCurrentUser().getFullName());
 	}

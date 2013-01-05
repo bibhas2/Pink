@@ -73,20 +73,10 @@
             <ul class="nav nav-list">
               <li class="nav-header">Defects</li>
               <li><p:a href="defects/open">Open a defect</p:a></li>
-              <li><a href="#">Search for defects</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+              <li><p:a href="defects/query">Query defects</p:a></li>
               <li class="nav-header">Projects</li>
               <li><a href="#">Create a Project</a></li>
               <li><a href="#">Manage Projects</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
