@@ -36,6 +36,7 @@ public class DefectController extends Controller {
 	private List<AppUser> userList;
 	private DefectQuery query = new DefectQuery();
 	private List<Defect> defectList;
+	private Project project = new Project();
 	
 	@SessionCheck
 	public String index() {
@@ -154,7 +155,40 @@ public class DefectController extends Controller {
 		
 		return "@show/" + defect.getId();
 	}
-	
+	@SessionCheck
+	@Path("/project-list")
+	public String projectList() {
+		projectList = dmgr.getAllProjectPopulated();
+		
+		return "project_list";
+	}
+	@SessionCheck
+	@Path("/edit-project/project.id")
+	public String editProject() {
+		if (context.isPostBack() && !context.isValidationFailed()) {
+			dmgr.updateProject(project);
+			return "project-list";
+		} else {
+			userList = smgr.getAllUser();
+			project = dmgr.getProject(project.getId());
+			
+			return "edit_project";
+		}
+	}
+	@SessionCheck
+	@Path("/create-project")
+	public String createProject() {
+		if (context.isPostBack() && !context.isValidationFailed()) {
+			dmgr.createProject(project);
+			return "project-list";
+		} else {
+			userList = smgr.getAllUser();
+			project.setOwnerId(1); //Default owner
+			
+			return "create_project";
+		}
+	}
+		
 	public List<Project> getProjectList() {
 		return projectList;
 	}
@@ -175,5 +209,8 @@ public class DefectController extends Controller {
 	}
 	public List<Defect> getDefectList() {
 		return defectList;
+	}
+	public Project getProject() {
+		return project;
 	}
 }

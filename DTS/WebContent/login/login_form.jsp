@@ -72,7 +72,7 @@
         <p:input type="text" class="input-block-level" placeholder="Email address" name="email"/>
  	    <p:errors style="color: red" property="password"/>
         <p:input type="password" class="input-block-level" placeholder="Password" name="password"/>
-        
+        <p class="muted">Default: admin@example.com/admin</p>
         <input type="submit" class="btn btn-large btn-primary" value="Sign in"/>
       </p:form>
 

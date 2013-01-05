@@ -75,8 +75,8 @@
               <li><p:a href="defects/open">Open a defect</p:a></li>
               <li><p:a href="defects/query-form">Query defects</p:a></li>
               <li class="nav-header">Projects</li>
-              <li><a href="#">Create a Project</a></li>
-              <li><a href="#">Manage Projects</a></li>
+              <li><p:a href="defects/create-project">Create a Project</p:a></li>
+              <li><p:a href="defects/project-list">Manage Projects</p:a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

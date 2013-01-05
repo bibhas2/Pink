@@ -1,7 +1,13 @@
 package com.mobiarch.dts.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 
 /**
@@ -16,10 +22,14 @@ public class Project implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
+	@Size(min=3, message="Name must be at least 3 characters long")
 	private String name;
 
 	private int ownerId;
 
+	@Transient
+	private AppUser owner;
+	
 	public Project() {
 	}
 
@@ -45,6 +55,14 @@ public class Project implements Serializable {
 
 	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	public AppUser getOwner() {
+		return owner;
+	}
+
+	public void setOwner(AppUser owner) {
+		this.owner = owner;
 	}
 
 }

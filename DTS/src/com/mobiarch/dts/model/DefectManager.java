@@ -49,11 +49,23 @@ public class DefectManager {
 			obj.getOwnerId());
 		em.persist(obj);
 	}
+	
 	public List<Project> getAllProject() {
 		TypedQuery<Project> q = em.createQuery("select p from Project p", Project.class);
 		
 		return q.getResultList();
 	}
+	
+	public List<Project> getAllProjectPopulated() {
+		List<Project> list = getAllProject();
+		
+		for (Project p : list) {
+			p.setOwner(smgr.getUser(p.getOwnerId()));
+		}
+		
+		return list;
+	}
+	
 	public Project getProject(int id) {
 		return em.find(Project.class, id);
 	}
@@ -274,5 +286,12 @@ public class DefectManager {
 		d.setStateId(STATE_VERIFIED);
 		
 		createDefectLog(d.getId(), "Defect verified", session.getCurrentUser().getFullName());
+	}
+
+	public void updateProject(Project project) {
+		Project oldProject = getProject(project.getId());
+		
+		oldProject.setName(project.getName());
+		oldProject.setOwnerId(project.getOwnerId());
 	}
 }
