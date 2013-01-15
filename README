@@ -1,0 +1,9 @@
+Pink is a modern web framework for the Java EE 6 stack. 
+
+Projects in this repository:
+
+Pink - The framework.
+DTS - Sample app Defect Tracking System.
+FileDemo - Sample app that shows file upload.
+StoreDemo - Sample app online retail store.
+PinkTest - Various tests.
