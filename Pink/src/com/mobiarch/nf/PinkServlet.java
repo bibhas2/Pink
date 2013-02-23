@@ -29,7 +29,10 @@ public class PinkServlet extends HttpServlet {
 		try {
 			processor.process(request, response);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error", e);
+			if (!response.isCommitted()) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+			logger.log(Level.SEVERE, "Error processing request.", e);
 		}
 	}
 }
