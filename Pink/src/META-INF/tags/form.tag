@@ -13,7 +13,7 @@
 	request.setAttribute("formBeanClass", cdiBean.getBeanClass());
 	
 	//String action = null;
-	action = request.getContextPath() + context.getRequest().getServletPath() + "/" + action;
+	action = request.getContextPath() + "/" + action;
 	jspContext.setAttribute("action", action);
 	
 	if (method == null) {

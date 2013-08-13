@@ -3,7 +3,7 @@
 <%@attribute name="href" required="true"%>
 <%
 	Context context = Context.getContext();
-	href = request.getContextPath() + context.getRequest().getServletPath() + "/" + href;
+	href = request.getContextPath() + "/" + href;
 	jspContext.setAttribute("href", href);
 %>
 <a <c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> href="${href}"><jsp:doBody/></a>

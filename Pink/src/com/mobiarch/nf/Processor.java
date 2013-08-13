@@ -187,26 +187,38 @@ public class Processor {
 	 * @return
 	 */
 	public PathInfo compilePathInfo(HttpServletRequest request) {
-		String path = request.getPathInfo();
-		logger.fine("Processing URI: " + path);
-		if (path == null) {
-			throw new IllegalArgumentException("Incomplete URI");
-		}
-		// Break path in name and method
-		String parts[] = path.split("\\/");
 		PathInfo pi = new PathInfo();
-
+		String servletPath = request.getServletPath();
+		logger.fine("Servlet path: " + servletPath);
+		
+		String beanName = null;
+		if (servletPath.length() > 0) {
+			//Strip the leading "/"
+			beanName = servletPath.substring(1);
+		}
+		
+		if (beanName == null || beanName.length() == 0) {
+			beanName = "home";
+		}
+		logger.fine("Bean name: " + beanName);
+		pi.setBeanName(beanName);
 		pi.setMethodPath("index"); // Default method name
 		
-		for (int i = 0; i < parts.length; ++i) {
-			if (i == 0) {
-				continue; //Skip the first empty part
-			} else if (i == 1) {
-				pi.setBeanName(parts[i]);
-			} else if (i == 2) {
-				pi.setMethodPath(parts[i]);
-			} else {
-				pi.addPathParameter(parts[i]);
+		String path = request.getPathInfo();
+		logger.fine("Processing URI: " + path);
+
+		if (path != null) {
+			// Break path in name and method
+			String parts[] = path.split("\\/");
+			
+			for (int i = 0; i < parts.length; ++i) {
+				if (i == 0) {
+					continue; //Skip the first empty part
+				} else if (i == 1) {
+					pi.setMethodPath(parts[i]);
+				} else {
+					pi.addPathParameter(parts[i]);
+				}
 			}
 		}
 		if (pi.getBeanName() == null) {
@@ -255,10 +267,12 @@ public class Processor {
 		/*
 		 * Make sure that this bean is exposed.
 		 */
+		/*
 		if (!Controller.class.isAssignableFrom(b.getBeanClass())) {
 			logger.severe("CDI bean class is not exposed to the web by extending the Controller class: " + b.getBeanClass().getName());
 			throw new IllegalAccessError();
 		}
+		*/
 		logger.fine("Found bean: " + b.getBeanClass().getName());
 		
 		return b;
@@ -343,6 +357,7 @@ public class Processor {
 			//Relative outcome. Get JSP from bean's own folder.
 			outcome = "/" + beanName + "/" + outcome + ".jsp";
 		}
+		outcome = "/WEB-INF/views" + outcome; 
 		logger.fine("Forwarding to: " + outcome);
 		context.getRequest().getRequestDispatcher(outcome)
 				.forward(context.getRequest(), context.getResponse());
@@ -380,11 +395,10 @@ public class Processor {
 		
 		if (outcome.startsWith("/")) {
 			outcome = context.getRequest().getContextPath()
-					+ context.getRequest().getServletPath()
 					+ outcome;
 		} else {
 			outcome = context.getRequest().getContextPath()
-				+ context.getRequest().getServletPath() + "/" + beanName + "/"
+				+ "/" + beanName + "/"
 				+ outcome;
 		}
 		logger.fine("Redirecting to: " + outcome);
