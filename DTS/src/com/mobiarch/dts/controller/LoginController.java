@@ -15,7 +15,7 @@ import com.mobiarch.nf.PropertyViolation;
 
 @Named("login")
 @RequestScoped
-public class LoginController extends Controller {
+public class LoginController {
 	@Size(min=2, max=128, message="Please enter a valid e-mail address<br/>")
 	@Pattern(regexp="^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", message="Please enter a valid e-mail address<br/>")
 	String email;

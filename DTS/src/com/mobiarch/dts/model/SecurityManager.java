@@ -24,7 +24,7 @@ public class SecurityManager {
 	public AppUser authenticateUser(String email, String password) {
 		try {
 			byte hash[] = getPasswordHash(password);
-			TypedQuery<AppUser> q = em.createQuery("select u from AppUser u where email=:email", AppUser.class);
+			TypedQuery<AppUser> q = em.createQuery("select u from AppUser u where u.email=:email", AppUser.class);
 			
 			q.setParameter("email", email.toLowerCase());
 			
@@ -40,7 +40,7 @@ public class SecurityManager {
 	}
 	
 	public List<AppUser> getAllUser() {
-		TypedQuery<AppUser> q = em.createQuery("select u from AppUser u order by fullName", AppUser.class);
+		TypedQuery<AppUser> q = em.createQuery("select u from AppUser u order by u.fullName", AppUser.class);
 
 		return q.getResultList();
 	}

@@ -19,7 +19,7 @@ import com.mobiarch.nf.Path;
 
 @Named("defects")
 @RequestScoped
-public class DefectController extends Controller {
+public class DefectController {
 	@EJB
 	SecurityManager smgr;
 	@EJB
