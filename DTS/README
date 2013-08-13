@@ -10,3 +10,5 @@ Steps to setup a database:
 Launch the site using this URL:
 
 http://localhost:8080/DTS/login
+
+Login as "admin@example.com", password "admin".
