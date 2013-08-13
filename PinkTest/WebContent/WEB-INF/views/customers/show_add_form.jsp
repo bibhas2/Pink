@@ -2,7 +2,7 @@
 
 <html>
 <body>
-<a href="list">Back2 to List</a><br/>
+<a href="${pageContext.request.contextPath}/customers/list">Back to List</a><br/>
 
 <p:errors style="color: red"/>
 <p:form action="customers/register">

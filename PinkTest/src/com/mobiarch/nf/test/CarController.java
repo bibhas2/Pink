@@ -6,11 +6,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-import com.mobiarch.nf.Controller;
-
 @Named("cars")
 @RequestScoped
-public class CarController extends Controller {
+public class CarController {
 	ArrayList<CarModel> availableModels;
 	int selectedModel[];
 	CarModel carModel = new CarModel(0, null);
@@ -42,7 +40,7 @@ public class CarController extends Controller {
 			System.out.println("Selected model: " + id);
 		}
 		
-		return "index";
+		return "";
 	}
 	public String makeNestedSelection() {
 		System.out.println("Selected model: " + carModel.id);

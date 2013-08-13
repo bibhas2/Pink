@@ -2,7 +2,8 @@
 
 <html>
 <body>
-<a href="register">Add new customer</a>
+<a href="${pageContext.request.contextPath}/customers/register">Add2 new customer</a>
+<img src="${pageContext.request.contextPath}/resources/customer.jpg"/>
 <h2>Customer List</h2>
 <c:forEach  items="${customers.customerList}" var="c">
 <p>

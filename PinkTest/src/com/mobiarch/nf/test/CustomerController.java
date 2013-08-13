@@ -10,12 +10,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.mobiarch.nf.Context;
-import com.mobiarch.nf.Controller;
 import com.mobiarch.nf.Path;
 
 @Named("customers")
 @RequestScoped
-public class CustomerController extends Controller {
+public class CustomerController {
 	Logger logger = Logger.getLogger(getClass().getName());
 	@Inject
 	Context context;
@@ -58,14 +57,14 @@ public class CustomerController extends Controller {
 	}
 
 	public String register() {
-		if (context != null && context.isPostBack() && context.isValidationFailed() == false) {
+		if (context.isPostBack() && context.isValidationFailed() == false) {
 			logger.fine("Registering: " + customer.getFullName() + " Email: " + customer.getEmail());
 
 			String id = String.valueOf(++nextId);
 			customer.setId(id);
 			customerList.put(id, customer);
 
-			return "show/" + id;
+			return "list";
 		} else {
 			return "show_add_form";
 		}

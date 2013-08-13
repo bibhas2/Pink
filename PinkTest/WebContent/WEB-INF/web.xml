@@ -12,6 +12,8 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Pink Servlet</servlet-name>
-    <url-pattern>/app/*</url-pattern>
-  </servlet-mapping>
+    <url-pattern></url-pattern>
+    <url-pattern>/cars/*</url-pattern>
+    <url-pattern>/customers/*</url-pattern>
+    </servlet-mapping>
 </web-app>
