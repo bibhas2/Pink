@@ -176,12 +176,15 @@ public class Processor {
 	}
 
 	/**
-	 * This method gathers all available information from the URI path. A URI path is
+	 * <p>This method gathers all available information from the URI path. A URI path is
 	 * of the format: /BEAN_NAME/METHOD_PATH/PROPERTY1/PROPERTY2/PROPERTY_N. 
 	 * Where, BEAN_NAME is the name of the CDI bean. It is the only mandatory part of a URI. METHOD_PATH is the path of a public method
 	 * of that bean. By default, it is the name of the method but can be overridden using the @Path
 	 * annotation. If a METHOD_PATH is absent then "index" is assumed to be the method name. PROPERTY1, PROPERTY2 and so on
-	 * are bean property values. They can be used in place of query strings for a more SEO friendly URL.
+	 * are bean property values. They can be used in place of query strings for a more SEO friendly URL.</p>
+	 * 
+	 * <p>If BEAN_NAME is absent, that is, the URI path is simply "/", then "home" is assumed to be the bean name and "index" is the method name.
+	 * This is used to create a dynamic home page.</p>
 	 * 
 	 * @param request
 	 * @return
