@@ -34,6 +34,8 @@ public class Processor {
 
 	private static final ThreadLocal<Context> contextVar = new ThreadLocal<Context>();
 	private static ConcurrentHashMap<String, MethodInfo> methodCache = new ConcurrentHashMap<String, MethodInfo>();
+	private static ConcurrentHashMap<String, BeanInfo> beanInfoCache = new ConcurrentHashMap<String, BeanInfo>();
+	private static final String DEFAULT_METHOD = "index";
 	/**
 	 * <p>This is the core HTTP request processing routine. Every request 
 	 * meant for a CDI managed bean method is processed by this function.</p>
@@ -107,71 +109,121 @@ public class Processor {
 			logger.fine("Got a hit in method cache");
 			return mi;
 		}
+		BeanInfo bi = beanInfoCache.get(pi.getBeanName());
+		if (bi != null) {
+			/* 
+			 * Wrong method name. Or, when method name is 
+			 * missing and path parameter is provided.
+			 */
+			return fallbackToDefaultMethod(pi);
+		}
 		/*
-		 * Multiple threads may lookup the same class. The duplicate work can
-		 * only happen in the beginning of life of an app. This is quite harmless.
+		 * This synchronized block will only execute in case of
+		 * very first request for a bean when method data 
+		 * hasn't been collected.
 		 */
-		
-		//Build the entire method database for the class.
-		Method list[] = cls.getDeclaredMethods();
-		for (int i = 0; i < list.length; ++i) {
-			Method m = list[i];
-			
-			if ((m.getModifiers() & Modifier.PUBLIC) == 0) {
-				logger.fine("Skipping private method: " + m.getName());
-				continue;
-			}
-			logger.fine("Inspecting method: " + m.getName());
-			//Let's see if the method has annotation
-			Path p = m.getAnnotation(Path.class);
-			if (p == null) {
-				String key = pi.getBeanName() + "/" + m.getName();
-				MethodInfo tmpMi = new MethodInfo();
-				
-				tmpMi.setMethod(m);
-				methodCache.putIfAbsent(key, tmpMi);
-			} else {
-				MethodInfo tmpMi = new MethodInfo();
-				String val = p.value();
-				
-				if (val == null || val.length() == 0) {
-					throw new IllegalArgumentException("Path annotation is missing a value");
+		synchronized (cls) {
+			do { //So we can break outta here
+				bi = beanInfoCache.get(pi.getBeanName());
+				if (bi != null) {
+					// Another thread has already collected the method data.
+					break;
 				}
-				String parts[] = val.split("\\/");
-				boolean isAbsolute = parts[0].length() == 0; //true if path starts with "/".
-				if (isAbsolute) {
-					logger.fine("Absolute path is set for method.");
-					for (int j = 0; j < parts.length; ++j) {
-						if (j == 0) {
-							continue;
-						} else if (j == 1) {
-							tmpMi.setPath(parts[j]);
+				logger.fine("Collecting method data for bean: " + pi.getBeanName());
+				// Build the entire method database for the class.
+				Method list[] = cls.getDeclaredMethods();
+				for (int i = 0; i < list.length; ++i) {
+					Method m = list[i];
+
+					if ((m.getModifiers() & Modifier.PUBLIC) == 0) {
+						logger.fine("Skipping private method: " + m.getName());
+						continue;
+					}
+					logger.fine("Inspecting method: " + m.getName());
+					// Let's see if the method has annotation
+					Path p = m.getAnnotation(Path.class);
+					if (p == null) {
+						String key = pi.getBeanName() + "/" + m.getName();
+						MethodInfo tmpMi = new MethodInfo();
+
+						tmpMi.setMethod(m);
+						methodCache.putIfAbsent(key, tmpMi);
+					} else {
+						MethodInfo tmpMi = new MethodInfo();
+						String val = p.value();
+
+						if (val == null || val.length() == 0) {
+							throw new IllegalArgumentException(
+									"Path annotation is missing a value");
+						}
+						String parts[] = val.split("\\/");
+						//True if path starts with "/"
+						boolean isAbsolute = parts[0].length() == 0; 
+						if (isAbsolute) {
+							logger.fine("Absolute path is set for method.");
+							for (int j = 0; j < parts.length; ++j) {
+								if (j == 0) {
+									continue;
+								} else if (j == 1) {
+									tmpMi.setPath(parts[j]);
+								} else {
+									tmpMi.addParameterName(parts[j]);
+								}
+							}
+
+							String key = pi.getBeanName() + "/"
+									+ tmpMi.getPath();
+							tmpMi.setMethod(m);
+							methodCache.putIfAbsent(key, tmpMi);
 						} else {
-							tmpMi.addParameterName(parts[j]);
+							logger.fine("Relative path is set for method.");
+							for (int j = 0; j < parts.length; ++j) {
+								tmpMi.addParameterName(parts[j]);
+							}
+
+							String key = pi.getBeanName() + "/" + m.getName();
+							tmpMi.setMethod(m);
+							methodCache.putIfAbsent(key, tmpMi);
 						}
 					}
-					
-					String key = pi.getBeanName() + "/" + tmpMi.getPath();
-					tmpMi.setMethod(m);
-					methodCache.putIfAbsent(key, tmpMi);
-				} else {
-					logger.fine("Relative path is set for method.");
-					for (int j = 0; j < parts.length; ++j) {
-						tmpMi.addParameterName(parts[j]);
-					}
-					
-					String key = pi.getBeanName() + "/" + m.getName();
-					tmpMi.setMethod(m);
-					methodCache.putIfAbsent(key, tmpMi);
 				}
-			}
+				//We are done collecting data. Store the BeanInfo to 
+				//indicate that.
+				bi = new BeanInfo();
+				beanInfoCache.putIfAbsent(pi.getBeanName(), bi);
+			} while (false);
 		}
-		
+	
 		mi = methodCache.get(methodKey);
 		
 		if (mi == null) {
+			return fallbackToDefaultMethod(pi);
+		}
+		return mi;
+	}
+
+	/**
+	 * When a method name is supplied in the URI 
+	 * but we can not locate the method, we try to
+	 * execute the "index" method and move the supplied method name
+	 * as the first path parameter. So: "/bean-name/path-param" essentially
+	 * becomes "/bean-name/index/path-param. 
+	 * 
+	 * This method will throw IllegalArgumentException if the "index" method
+	 * doesn't exist.
+	 */
+	protected MethodInfo fallbackToDefaultMethod(PathInfo pi) {
+		logger.fine("Falling back to try to use default method.");
+		MethodInfo mi = methodCache.get(pi.getBeanName() + "/" + DEFAULT_METHOD);
+		if (mi == null) {
+			logger.fine("Could not fall back to non-existent index method. Giving up.");
+			
 			throw new IllegalArgumentException("Invalid method path: " + pi.getMethodPath());
 		}
+		//Push the supplied method name as the first path parameter.
+		pi.getPathParameters().add(0, pi.getMethodPath());
+		pi.setMethodPath(DEFAULT_METHOD);
+		
 		return mi;
 	}
 
@@ -205,7 +257,7 @@ public class Processor {
 		}
 		logger.fine("Bean name: " + beanName);
 		pi.setBeanName(beanName);
-		pi.setMethodPath("index"); // Default method name
+		pi.setMethodPath(DEFAULT_METHOD); // Default method name
 		
 		String path = request.getPathInfo();
 		logger.fine("Processing URI: " + path);
