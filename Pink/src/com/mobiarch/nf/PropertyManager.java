@@ -209,7 +209,8 @@ public class PropertyManager {
 	 * @param cls - The true class of the bean. For a CDI bean this may be different from what getClass() returns.
 	 * @param o - The bean object.
 	 * @param name - The name of the property. This can be nested with each property separated by a ".". Such as "customer.phone".
-	 * @Param bConvert - If true then convert the property value to String.
+	 * @Param bConvert - If true then convert the property value to String, unless the property is an array. An array property
+	 * value is returned unconverted, as is.
 	 * @return The value of the property converted to String. IllegalArgumentException is thrown if property name is invalid.
 	 * @throws Exception
 	 */
@@ -235,7 +236,7 @@ public class PropertyManager {
 			targetClass = target.getClass();
 		}
 
-		if (bConvert) {
+		if (bConvert && !targetClass.isArray()) {
 			return convertToString(target, desc);
 		} else {
 			return target;
