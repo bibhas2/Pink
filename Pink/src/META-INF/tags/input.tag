@@ -41,7 +41,7 @@ if (type.equals("checkbox") || type.equals("radio")) {
 	if (label != null) {
 		//We need an ID for label. Generate one if needed.
 		if (id == null || id.length() == 0) {
-			id = name + "." + propertyValue;
+			id = name + "." + value;
 			jspContext.setAttribute("id", id);
 		}
 	}
