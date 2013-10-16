@@ -56,7 +56,7 @@ function ajaxSubmitForm() {
  */
 function showContactList() {
 	$.ajax({
-		url: "/AjaxDemo/app/contacts/list",
+		url: "/AjaxDemo/contacts/list",
 		type: "GET",
 		dataType: "json",
 		error: function (xhr, e1, e2) {console.log(e1); console.log(e2); alert("Failed to get contact list");},

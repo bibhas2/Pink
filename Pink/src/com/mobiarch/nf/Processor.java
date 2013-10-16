@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @Named
 @RequestScoped
@@ -427,9 +427,9 @@ public class Processor {
 	public void outputJSON(Object o) throws Exception {
 		logger.fine("Sending JSON document back.");
 		context.getResponse().setContentType("application/json");
-		ObjectMapper mapper = new ObjectMapper();
+		Gson mapper = new Gson();
 		
-		mapper.writeValue(context.getResponse().getOutputStream(), o);
+		mapper.toJson(o, context.getResponse().getWriter());
 	}
 
 	/**
