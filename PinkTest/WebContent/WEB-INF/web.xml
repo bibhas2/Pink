@@ -16,5 +16,6 @@
     <url-pattern>/cars/*</url-pattern>
     <url-pattern>/customers/*</url-pattern>
     <url-pattern>/short-url/*</url-pattern>
+    <url-pattern>/array/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="MacRoman" standalone="no"?>
 <jardesc>
-    <jar path="/tmp/pink.jar"/>
+    <jar path="/Users/bibhas/Documents/gae/Pink/PinkTest/WebContent/WEB-INF/lib/pink.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/Pink/jar_export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,9 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <file path="/Pink/.project"/>
         <folder path="/Pink/build"/>
-        <file path="/Pink/.classpath"/>
         <javaElement handleIdentifier="=Pink/src"/>
+        <file path="/Pink/.classpath"/>
+        <file path="/Pink/.project"/>
     </selectedElements>
 </jardesc>
