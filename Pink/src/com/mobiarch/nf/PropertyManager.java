@@ -209,8 +209,8 @@ public class PropertyManager {
 	 * @param cls - The true class of the bean. For a CDI bean this may be different from what getClass() returns.
 	 * @param o - The bean object.
 	 * @param name - The name of the property. This can be nested with each property separated by a ".". Such as "customer.phone".
-	 * @Param bConvert - If true then convert the property value to String, unless the property is an array. An array property
-	 * value is returned unconverted, as is.
+	 * @Param bConvert - If true then convert the property value to String. If the property is an array, then a String[] is
+	 * returned with each element from the actual property array converted to String.
 	 * @return The value of the property converted to String. IllegalArgumentException is thrown if property name is invalid.
 	 * @throws Exception
 	 */
@@ -236,7 +236,7 @@ public class PropertyManager {
 			targetClass = target.getClass();
 		}
 
-		if (bConvert && !targetClass.isArray()) {
+		if (bConvert) {
 			return convertToString(target, desc);
 		} else {
 			return target;
@@ -375,15 +375,14 @@ public class PropertyManager {
 		}
 	}
 
-	public String convertToString(Object o, PropertyDescriptor desc) {
-		String val = "";
+	private Object convertToString(Object o, PropertyDescriptor desc) {
 		Format fmt = (Format) desc.getValue(FORMAT_ANNOTATION);
 		String formatStr = null;
 		Context ctx = Context.getContext();
 		NumberFormat nFmt = null;
 
 		if (o == null) {
-			return val;
+			return "";
 		}
 		
 		if (fmt != null) {
@@ -422,6 +421,20 @@ public class PropertyManager {
 		} else if (cls == java.sql.Date.class) {
 			java.util.Date d = new java.util.Date(((java.sql.Date) o).getTime());
 			return dateToString(d, formatStr);
+		} else if (cls.isArray()) {
+			logger.fine("Converting array property to String[]");
+			if (cls.getComponentType() == String.class) {
+				logger.fine("Property is String[]. Returning as is.");
+				return o;
+			}
+			int length = Array.getLength(o);
+			String strArray[] = new String[length];
+			for (int i = 0; i < length; ++i) {
+				Object item = Array.get(o, i);
+				strArray[i] = (String) convertToString(item, desc);
+			}
+			//For array property, we return String[].
+			return strArray;
 		}
 		
 		return o.toString();
