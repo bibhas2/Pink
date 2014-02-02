@@ -490,4 +490,12 @@ public class Processor {
 	public Validator getValidator() {
 		return validator;
 	}
+
+	public BeanManager getBeanManager() {
+		return beanManager;
+	}
+
+	public void setBeanManager(BeanManager beanManager) {
+		this.beanManager = beanManager;
+	}
 }
