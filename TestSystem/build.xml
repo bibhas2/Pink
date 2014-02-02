@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TestSystem Packaging Script" default="package" basedir=".">
+	<target name="makejar" description="Create a jar for the project">
+		<delete file="pink-test-system.jar"/>
+		<jar jarfile="pink-test-system.jar" includes="**/*.class" basedir="build/classes" />
+	</target>
+	<target name="package" description="Create the final package" depends="makejar">
+		<tar destfile="PinkTestSystem.tar.gz" compression="gzip">
+			<fileset dir="WebContent/WEB-INF/lib"/>
+			<tarfileset file="pink-test-system.jar"/>
+		</tar>
+		<delete file="pink-test-system.jar"/>
+	</target>
+</project>
