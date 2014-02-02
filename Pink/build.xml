@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CouchTools Packaging Script" default="package" basedir=".">
-	<target name="package" description="Create a jar for the project">
+<project name="Pink Packaging Script" default="package" basedir=".">
+	<target name="makejar" description="Create a jar for the project">
 		<delete file="pink.jar"/>
 		<jar jarfile="pink.jar" includes="**/*.class" basedir="build/classes" />
+	</target>
+	<target name="package" description="Create the final package" depends="makejar">
+		<tar destfile="Pink.tar.gz" compression="gzip">
+			<fileset dir="WebContent/WEB-INF/lib"/>
+			<tarfileset file="pink.jar"/>
+		</tar>
+		<delete file="pink.jar"/>
 	</target>
 </project>
