@@ -2,12 +2,15 @@
 <project name="Pink Packaging Script" default="package" basedir=".">
 	<target name="makejar" description="Create a jar for the project">
 		<delete file="pink.jar"/>
-		<jar jarfile="pink.jar" includes="**/*.class" basedir="build/classes" />
+		<jar jarfile="pink.jar">
+			<fileset dir="build/classes" includes="**/*.class"/>
+			<fileset dir="src" includes="META-INF/**"/>
+		</jar>
 	</target>
 	<target name="package" description="Create the final package" depends="makejar">
 		<tar destfile="Pink.tar.gz" compression="gzip">
-			<fileset dir="WebContent/WEB-INF/lib"/>
-			<tarfileset file="pink.jar"/>
+			<tarfileset prefix="Pink" dir="WebContent/WEB-INF/lib"/>
+			<tarfileset prefix="Pink" file="pink.jar"/>
 		</tar>
 		<delete file="pink.jar"/>
 	</target>
