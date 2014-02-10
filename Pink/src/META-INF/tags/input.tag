@@ -1,12 +1,14 @@
 <%@tag import="java.util.logging.Logger"%>
 <%@tag import="com.mobiarch.nf.PropertyManager,java.lang.reflect.Array"%><%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@tag dynamic-attributes="dynattrs" %> <%@attribute name="name" required="true"%><%@attribute name="type" required="false"%><%@attribute name="value" required="false"%><%@attribute name="id" required="false"%><%@attribute name="label" required="false"%>
-<%Object formBean = request.getAttribute("formBean");
+<%
+Logger logger = Logger.getLogger("com.mobiarch.nf.tags");
+logger.fine("Rendering input tag. Name: " + name);
+Object formBean = request.getAttribute("formBean");
 Class<?> cls = (Class<?>) request.getAttribute("formBeanClass");
 PropertyManager pm = new PropertyManager();
 Object propertyValue = pm.getProperty(cls, formBean, name);
-Object useValue = "";
-Logger logger = Logger.getLogger("com.mobiarch.nf.tags");
+Object useValue = null;
 
 if (type == null) {
 	type = "text";
@@ -46,10 +48,14 @@ if (type.equals("checkbox") || type.equals("radio")) {
 		}
 	}
 } else {
-	if (propertyValue.getClass().isArray()) {
+	if (propertyValue != null && propertyValue.getClass().isArray()) {
 		throw new IllegalStateException("Array property can be bound to checkbox and radio input types only.");
 	}
 	useValue = propertyValue;
-}%>
+}
+if (useValue == null) {
+	useValue = "";
+}
+%>
 <input<c:if test="${!empty id}"> id="<%=id%>"</c:if><c:forEach items="${dynattrs}" var="a"> ${a.key}="${a.value}"</c:forEach> <%=qualifier%> type="${type}" value="<%=useValue%>" name="${name}"/>
 <c:if test="${!empty label}"><label for="<%=id%>">${label}</label></c:if>
