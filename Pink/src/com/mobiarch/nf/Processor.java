@@ -102,7 +102,7 @@ public class Processor {
 	 * @return
 	 */
 	public MethodInfo resolveMethod(PathInfo pi, Class<?> cls) {
-		String methodKey = pi.getBeanName() + "/" + pi.getMethodPath();
+		String methodKey = pi.getBeanName() + "/" + convertToCamelCase(pi.getMethodPath());
 		MethodInfo mi = methodCache.get(methodKey);
 		
 		if (mi != null) {
@@ -200,6 +200,37 @@ public class Processor {
 			return fallbackToDefaultMethod(pi);
 		}
 		return mi;
+	}
+
+	/*
+	 * Convert "do-something" to "doSomething".
+	 */
+  	private static String convertToCamelCase(String methodPath) {
+		if (methodPath.indexOf("-") == -1) {
+		  return methodPath;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		boolean bConvert = false;
+		
+		for (int i = 0; i < methodPath.length(); ++i) {
+			char ch = methodPath.charAt(i);
+			
+			if (ch == '-') {
+				bConvert = true;
+				
+				continue;
+			}
+			
+			if (bConvert) {
+				ch = Character.toUpperCase(ch);
+				
+				bConvert = false;
+			}
+			sb.append(ch);
+		}
+		
+		return sb.toString();
 	}
 
 	/**
