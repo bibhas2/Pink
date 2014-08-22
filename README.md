@@ -42,6 +42,8 @@ Deploy the sample app to a full stack Java EE server, such as TomEE.
 cp FileDemo-0.0.1-SNAPSHOT.war ~/Programs/apache-tomee-jaxrs-1.5.2/webapps/FileDemo.war
 ```
 
+Read each sample project's README to find out how to setup and use the application.
+
 ##Creating a Project that Uses Pink
 The quickest way to create a new Pink based web project is to use the Maven pink-archetype archetype.
 See the [PinkArchetype] (https://github.com/bibhas2/PinkArchetype) repository for instructions.
