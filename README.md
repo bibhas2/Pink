@@ -1,8 +1,8 @@
-##Overview
+## Overview
 Pink is a modern web framework for the Java EE 6 stack. For usage details and tutorials, go
 to the [Project's Home Page](http://mobiarch.wordpress.com/pink/).
 
-##Projects in this repository
+## Projects in this repository
 
 - *Pink* - The framework.
 - *DTS*- Sample app Defect Tracking System.
@@ -11,7 +11,7 @@ to the [Project's Home Page](http://mobiarch.wordpress.com/pink/).
 - *PinkTest* - Various tests.
 - *AjaxDemo* - Sample app that shows Ajax capabilities of Pink
 
-##Building Instructions
+## Building Instructions
 
 Each project is a Maven Eclipse project. That means, you can build them from command line
 or from Eclipse. Quickest way is command line.
@@ -44,6 +44,6 @@ cp FileDemo-0.0.1-SNAPSHOT.war ~/Programs/apache-tomee-jaxrs-1.5.2/webapps/FileD
 
 Read each sample project's README to find out how to setup and use the application.
 
-##Creating a Project that Uses Pink
+## Creating a Project that Uses Pink
 The quickest way to create a new Pink based web project is to use the Maven pink-archetype archetype.
 See the [PinkArchetype] (https://github.com/bibhas2/PinkArchetype) repository for instructions.
