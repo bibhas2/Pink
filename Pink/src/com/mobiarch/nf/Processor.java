@@ -104,7 +104,7 @@ public class Processor {
 	 * @return
 	 */
 	public MethodInfo resolveMethod(PathInfo pi, Class<?> cls) {
-		String methodKey = pi.getBeanName() + "/" + convertToCamelCase(pi.getMethodPath());
+		String methodKey = pi.getBeanName() + "/" + pi.getMethodPath();
 		MethodInfo mi = methodCache.get(methodKey);
 
 		if (mi != null) {
@@ -139,16 +139,22 @@ public class Processor {
 
 					if ((m.getModifiers() & Modifier.PUBLIC) == 0) {
 						logger.fine("Skipping private method: " + m.getName());
+						
 						continue;
 					}
+					
 					logger.fine("Inspecting method: " + m.getName());
 					// Let's see if the method has annotation
 					Path p = m.getAnnotation(Path.class);
 					if (p == null) {
-						String key = pi.getBeanName() + "/" + m.getName();
+					  logger.fine("Method does not have a path annotaion. Using method name as path.");
+					  
+						String key = pi.getBeanName() + "/" + convertFromCamelcase(m.getName());
 						MethodInfo tmpMi = new MethodInfo();
 
 						tmpMi.setMethod(m);
+						
+            logger.fine("Saving method for path: " + key);
 						methodCache.putIfAbsent(key, tmpMi);
 					} else {
 						MethodInfo tmpMi = new MethodInfo();
@@ -163,6 +169,7 @@ public class Processor {
 						boolean isAbsolute = parts[0].length() == 0;
 						if (isAbsolute) {
 							logger.fine("Absolute path is set for method.");
+							
 							for (int j = 0; j < parts.length; ++j) {
 								if (j == 0) {
 									continue;
@@ -176,15 +183,20 @@ public class Processor {
 							String key = pi.getBeanName() + "/"
 									+ tmpMi.getPath();
 							tmpMi.setMethod(m);
+							
+							logger.fine("Saving method for path: " + key);
 							methodCache.putIfAbsent(key, tmpMi);
 						} else {
-							logger.fine("Relative path is set for method.");
+							logger.fine("Relative path is set for method. Using method name as path.");
+							
 							for (int j = 0; j < parts.length; ++j) {
 								tmpMi.addParameterName(parts[j]);
 							}
 
-							String key = pi.getBeanName() + "/" + m.getName();
+							String key = pi.getBeanName() + "/" + convertFromCamelcase(m.getName());
 							tmpMi.setMethod(m);
+              
+							logger.fine("Saving method for path: " + key);
 							methodCache.putIfAbsent(key, tmpMi);
 						}
 					}
@@ -203,37 +215,29 @@ public class Processor {
 		}
 		return mi;
 	}
-
-	/*
-	 * Convert "do-something" to "doSomething".
-	 */
-  	private static String convertToCamelCase(String methodPath) {
-		if (methodPath.indexOf("-") == -1) {
-		  return methodPath;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		boolean bConvert = false;
-
-		for (int i = 0; i < methodPath.length(); ++i) {
-			char ch = methodPath.charAt(i);
-
-			if (ch == '-') {
-				bConvert = true;
-
-				continue;
-			}
-
-			if (bConvert) {
-				ch = Character.toUpperCase(ch);
-
-				bConvert = false;
-			}
-			sb.append(ch);
-		}
-
-		return sb.toString();
-	}
+  	
+  	/**
+  	 * Converts doSomething to do-something.
+  	 * 
+  	 * @param methodName
+  	 * @return
+  	 */
+  	private static String convertFromCamelcase(String methodName) {
+  	  StringBuilder sb = new StringBuilder();
+  	  
+  	  for (int i = 0; i < methodName.length(); ++i) {
+  	    char ch = methodName.charAt(i);
+  	    
+  	    if (Character.isUpperCase(ch)) {
+  	      sb.append("-");
+  	      sb.append(Character.toUpperCase(ch));
+  	    } else {
+  	      sb.append(ch);
+  	    }
+  	  }
+  	  
+  	  return sb.toString();
+  	}
 
 	/**
 	 * When a method name is supplied in the URI
