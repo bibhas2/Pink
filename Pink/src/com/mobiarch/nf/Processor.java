@@ -230,7 +230,7 @@ public class Processor {
   	    
   	    if (Character.isUpperCase(ch)) {
   	      sb.append("-");
-  	      sb.append(Character.toUpperCase(ch));
+  	      sb.append(Character.toLowerCase(ch));
   	    } else {
   	      sb.append(ch);
   	    }
