@@ -147,15 +147,7 @@ public class Processor {
 					// Let's see if the method has annotation
 					Path p = m.getAnnotation(Path.class);
 					if (p == null) {
-					  logger.fine("Method does not have a path annotaion. Using method name as path.");
-					  
-						String key = pi.getBeanName() + "/" + convertFromCamelcase(m.getName());
-						MethodInfo tmpMi = new MethodInfo();
-
-						tmpMi.setMethod(m);
-						
-            logger.fine("Saving method for path: " + key);
-						methodCache.putIfAbsent(key, tmpMi);
+					  logger.fine("Method does not have a path annotaion. Skipping.");
 					} else {
 						MethodInfo tmpMi = new MethodInfo();
 						String val = p.value();

@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javax.activation.UnsupportedDataTypeException;
+import java.lang.IllegalStateException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import javax.validation.ConstraintViolation;
@@ -89,6 +90,12 @@ public class PropertyManager {
 			String propName = parts[idx];
 			logger.fine("Resolving target: " + propName);
 			target = getProperty(target, targetDescMap.get(propName), propName);
+			
+			if (target == null) {
+			  throw new IllegalStateException(
+			      String.format("Can not set property: %s because %s is null.", name, propName));
+			}
+			
 			targetClass = target.getClass();
 			targetDescMap = getPropertyMap(targetClass);
 			++idx;
@@ -295,6 +302,7 @@ public class PropertyManager {
 		map = new ConcurrentHashMap<String, PropertyDescriptor>(descList.length);
 		
 		for (PropertyDescriptor desc : descList) {
+		  logger.fine(String.format("Saving property: %s for class: %s", desc.getName(), clsName));
 			map.put(desc.getName(), desc);
 			//Save the Format annotation if present
 			try {
