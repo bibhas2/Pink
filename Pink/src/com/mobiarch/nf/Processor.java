@@ -510,8 +510,15 @@ public class Processor {
 				+ "/" + beanName + "/"
 				+ outcome;
 		}
-		logger.fine("Redirecting to: " + outcome);
-		context.getResponse().sendRedirect(outcome);
+		
+		redirectPermanent(outcome);
+	}
+	
+	private void redirectPermanent(String uri) {
+		logger.fine("Redirecting permanently to: " + uri);
+		
+		context.getResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		context.getResponse().setHeader("Location", uri);
 	}
 
 	/**
