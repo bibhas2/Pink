@@ -32,7 +32,7 @@ public class Processor {
 	Context context;
 	Logger logger = Logger.getLogger(getClass().getName());
 	@Inject
-	private Validator validator;
+	private PropertyManager propertyManager;
 
 	private static final ThreadLocal<Context> contextVar = new ThreadLocal<Context>();
 	private static ConcurrentHashMap<String, MethodInfo> methodCache = new ConcurrentHashMap<String, MethodInfo>();
@@ -534,9 +534,8 @@ public class Processor {
 	protected void transferProperties(HttpServletRequest request,
 			Bean<?> bean,
 			Object o, MethodInfo mi, PathInfo pi) throws Exception {
-		PropertyManager pmgr = new PropertyManager();
-
-		pmgr.transferProperties(request, bean.getBeanClass(), o, mi, pi);
+		propertyManager.transferProperties(request, bean.getBeanClass(), o, mi, pi);
+		propertyManager.validateBean(o);
 	}
 
 	//For non CDI clients to get context
@@ -546,10 +545,6 @@ public class Processor {
 
 	public static Processor getProcessor() {
 		return getContext().getProcessor();
-	}
-
-	public Validator getValidator() {
-		return validator;
 	}
 
 	public BeanManager getBeanManager() {

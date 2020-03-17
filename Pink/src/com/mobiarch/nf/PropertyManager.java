@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javax.activation.UnsupportedDataTypeException;
+import javax.inject.Inject;
+
 import java.lang.IllegalStateException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
@@ -27,6 +29,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 public class PropertyManager {
+	@Inject
+	private Validator validator;
+
 	public static final String FORMAT_ANNOTATION = "format_annotation";
 	
 	Logger logger = Logger.getLogger(getClass().getName());
@@ -120,7 +125,6 @@ public class PropertyManager {
 			try {
 				Object arg = convertFromString(values[0], desc.getPropertyType(), desc);
 				desc.getWriteMethod().invoke(target, arg);
-				validateProperty(targetClass, desc.getName(), arg);
 			} catch (ParseException pe) {
 				Format fmt = (Format) desc.getValue(FORMAT_ANNOTATION);
 				String msg = null;
@@ -193,11 +197,24 @@ public class PropertyManager {
 	}
 
 	public void validateProperty(Class<?> cls, String name, Object value) {
-		Validator validator = Processor.getProcessor().getValidator();
 		logger.fine("Validating URL parameter: " + name);
 		Set<?> violations = validator.validateValue(cls, name, value);
 		for (Object v : violations) {
 			ConstraintViolation<?> vi = (ConstraintViolation<?>) v;
+			
+			Context.getContext().addViolation(new PropertyViolation(vi));
+		}
+	}
+	
+	public void validateBean(Object bean) {
+		logger.fine("Validating: " + bean.getClass().getName());
+		
+		Set<?> violations = validator.validate(bean);
+		
+		for (Object v : violations) {
+			ConstraintViolation<?> vi = (ConstraintViolation<?>) v;
+			
+			logger.fine("Invalid property: " + vi.getPropertyPath().toString());
 			
 			Context.getContext().addViolation(new PropertyViolation(vi));
 		}
